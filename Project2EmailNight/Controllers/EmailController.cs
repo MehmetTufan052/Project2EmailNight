@@ -30,7 +30,7 @@ namespace Project2EmailNight.Controllers
 
             SmtpClient smtpClient = new SmtpClient();
             smtpClient.Connect("smtp.gmail.com", 587, false);
-            smtpClient.Authenticate("tufaneser8@gmail.com", "ykyb ehqw rygg tymu");
+            smtpClient.Authenticate("tufaneser8@gmail.com", "key");
             smtpClient.Send(mimeMessage);
             smtpClient.Disconnect(true);
 
