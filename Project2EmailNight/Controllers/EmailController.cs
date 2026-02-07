@@ -16,7 +16,7 @@ namespace Project2EmailNight.Controllers
         {
             MimeMessage mimeMessage=new MimeMessage();
 
-            MailboxAddress mailboxAddressFrom = new MailboxAddress("Identity Admin", "tufaneser8@gmail.com");
+            MailboxAddress mailboxAddressFrom = new MailboxAddress("Identity Admin", "email");
             mimeMessage.From.Add(mailboxAddressFrom);
 
             MailboxAddress mailboxAddressTo = new MailboxAddress("User", mailRequestDto.ReceiverEmail);
@@ -30,7 +30,7 @@ namespace Project2EmailNight.Controllers
 
             SmtpClient smtpClient = new SmtpClient();
             smtpClient.Connect("smtp.gmail.com", 587, false);
-            smtpClient.Authenticate("tufaneser8@gmail.com", "ykyb ehqw rygg tymu");
+            smtpClient.Authenticate("email", "key");
             smtpClient.Send(mimeMessage);
             smtpClient.Disconnect(true);
 
