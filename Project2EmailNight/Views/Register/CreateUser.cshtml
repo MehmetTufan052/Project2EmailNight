@@ -3,7 +3,7 @@
 @{
     Layout = null;
 }
-<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+@* <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
 <div class="container">
     <form method="post">
         <br /><br />
@@ -25,4 +25,203 @@
         <div class="text-danger" asp-validation-summary="ModelOnly"></div>
         <button class="btn btn-primary">Kayıt Ol</button>
     </form>
-</div>
+</div> *@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+	<title>Syndash - Bootstrap4 Admin Template</title>
+	<!--favicon-->
+	<link rel="icon" href="~/vertical-20260127T171413Z-3-001/vertical/assets/images/favicon-32x32.png" type="image/png" />
+	<!-- loader-->
+	<link href="~/vertical-20260127T171413Z-3-001/vertical/assets/css/pace.min.css" rel="stylesheet" />
+	<script src="~/vertical-20260127T171413Z-3-001/vertical/assets/js/pace.min.js"></script>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="~/vertical-20260127T171413Z-3-001/vertical/assets/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&family=Roboto&display=swap" />
+	<!-- Icons CSS -->
+	<link rel="stylesheet" href="~/vertical-20260127T171413Z-3-001/vertical/assets/css/icons.css" />
+	<!-- App CSS -->
+	<link rel="stylesheet" href="~/vertical-20260127T171413Z-3-001/vertical/assets/css/app.css" />
+</head>
+
+<body class="bg-register">
+	<!-- wrapper -->
+	<div class="wrapper">
+		<div class="section-authentication-register d-flex align-items-center justify-content-center">
+			<div class="row">
+				<div class="col-12 col-lg-10 mx-auto">
+					<div class="card radius-15 overflow-hidden">
+						<div class="row g-0">
+							<div class="col-xl-6">
+								<div class="card-body p-md-5">
+									<div class="text-center">
+										<img src="~/vertical-20260127T171413Z-3-001/vertical/assets/images/logo-icon.png" width="80" alt="">
+										<h3 class="mt-4 font-weight-bold">Hesap Oluşturun</h3>
+									</div>
+									<div class="">
+										
+										<div class="form-body">
+											<form class="row g-3" id="registerForm">
+												<div class="col-12">
+													<label for="inputName" class="form-label">Adınız</label>
+													<input type="text" class="form-control" id="inputName" name="name" placeholder="Adınız" required>
+												</div>
+												<div class="col-12">
+													<label for="inputSurname" class="form-label">Soyadınız</label>
+													<input type="text" class="form-control" id="inputSurname" name="surname" placeholder="Soyadınız" required>
+												</div>
+												<div class="col-12">
+													<label for="inputEmail" class="form-label">Email Adresiniz</label>
+													<input type="email" class="form-control" id="inputEmail" name="email" placeholder="Email Adresiniz" required>
+												</div>
+												<div class="col-12">
+													<label for="inputPassword" class="form-label">Şifreniz</label>
+													<div class="input-group" id="show_hide_password">
+														<input type="password" class="form-control border-end-0" id="inputPassword" name="password" placeholder="Şifrenizi Giriniz" required> <a href="javascript:;" class="input-group-text bg-transparent"><i class="bx bx-hide"></i></a>
+													</div>
+												</div>
+												<div class="col-12">
+													<div class="form-check form-switch">
+														<input class="form-check-input" type="checkbox" id="termsCheckbox" required>
+														<label class="form-check-label" for="termsCheckbox">I read and agree to <a href="javascript:;" id="termsLink">Terms & Conditions</a></label>
+													</div>
+												</div>
+												<div class="col-12">
+													<div class="d-grid">
+														<button type="submit" class="btn btn-primary"><i class="bx bx-user me-1"></i>Sign up</button>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+
+								</div>
+							</div>
+							<div class="col-xl-6 bg-login-color d-flex align-items-center justify-content-center">
+								<img src="~/vertical-20260127T171413Z-3-001/vertical/assets/images/login-images/register-frent-img.jpg" class="img-fluid" alt="...">
+							</div>
+						</div>
+						<!--end row-->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end wrapper -->
+	<!-- Terms & Conditions Modal -->
+	<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="termsModalLabel">Terms & Conditions</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<h6 class="fw-bold">Terms of Service</h6>
+					<p>Welcome to our service. By registering an account, you agree to comply with and be bound by the following terms and conditions.</p>
+
+					<h6 class="fw-bold mt-4">1. Account Registration</h6>
+					<p>You must provide accurate and complete information during the registration process. You are responsible for maintaining the confidentiality of your account credentials.</p>
+
+					<h6 class="fw-bold mt-4">2. User Responsibilities</h6>
+					<p>You agree to use our service only for lawful purposes and in accordance with these terms. You must not use our service in any way that violates any applicable laws or regulations.</p>
+
+					<h6 class="fw-bold mt-4">3. Privacy Policy</h6>
+					<p>We are committed to protecting your privacy. Your personal information will be collected, used, and stored in accordance with our Privacy Policy.</p>
+
+					<h6 class="fw-bold mt-4">4. Data Collection</h6>
+					<p>We collect information that you provide directly to us, including your name, email address, and any other information you choose to provide.</p>
+
+					<h6 class="fw-bold mt-4">5. Data Usage</h6>
+					<p>Your data will be used to provide and improve our services, communicate with you, and ensure the security of our platform.</p>
+
+					<h6 class="fw-bold mt-4">6. Data Protection</h6>
+					<p>We implement appropriate technical and organizational measures to protect your personal data against unauthorized access, alteration, or destruction.</p>
+
+					<h6 class="fw-bold mt-4">7. Termination</h6>
+					<p>We reserve the right to terminate or suspend your account at any time if you violate these terms or engage in any prohibited activities.</p>
+
+					<h6 class="fw-bold mt-4">8. Changes to Terms</h6>
+					<p>We may update these terms from time to time. Continued use of our service after changes constitutes acceptance of the updated terms.</p>
+
+					<p class="mt-4"><strong>Last updated: February 2026</strong></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="~/vertical-20260127T171413Z-3-001/vertical/assets/js/jquery.min.js"></script>
+	<script src="~/vertical-20260127T171413Z-3-001/vertical/assets/js/bootstrap.bundle.min.js"></script>
+
+	<script>
+		$(document).ready(function () {
+			// Password show/hide functionality
+			$("#show_hide_password a").on('click', function (event) {
+				event.preventDefault();
+				if ($('#show_hide_password input').attr("type") == "text") {
+					$('#show_hide_password input').attr('type', 'password');
+					$('#show_hide_password i').addClass("bx-hide");
+					$('#show_hide_password i').removeClass("bx-show");
+				} else if ($('#show_hide_password input').attr("type") == "password") {
+					$('#show_hide_password input').attr('type', 'text');
+					$('#show_hide_password i').removeClass("bx-hide");
+					$('#show_hide_password i').addClass("bx-show");
+				}
+			});
+
+			// Terms & Conditions link click
+			$("#termsLink").on('click', function (event) {
+				event.preventDefault();
+				var termsModal = new bootstrap.Modal(document.getElementById('termsModal'));
+				termsModal.show();
+			});
+
+			// Form submit
+			$("#registerForm").on('submit', function (event) {
+				event.preventDefault();
+
+				// Check if terms checkbox is checked
+				if (!$('#termsCheckbox').is(':checked')) {
+					alert('You must agree to the Terms & Conditions to register.');
+					return false;
+				}
+
+				// Collect form data
+				var formData = {
+					name: $('#inputName').val(),
+					surname: $('#inputSurname').val(),
+					email: $('#inputEmail').val(),
+					password: $('#inputPassword').val()
+				};
+
+				// AJAX call to register user
+				$.ajax({
+					url: 'your-api-endpoint/register.php', // Backend endpoint'inizi buraya yazın
+					type: 'POST',
+					data: JSON.stringify(formData),
+					contentType: 'application/json',
+					success: function(response) {
+						alert('Registration successful! Please check your email for confirmation.');
+						// Redirect to login or other page
+						// window.location.href = 'login.html';
+					},
+					error: function(xhr, status, error) {
+						alert('Registration failed: ' + error);
+					}
+				});
+			});
+		});
+	</script>
+</body>
+
+</html>
