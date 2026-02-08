@@ -22,26 +22,44 @@ namespace Project2EmailNight.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser(UserRegisterDto userRegisterDto)
         {
+            Random random = new Random();
+            int confirmCode = random.Next(100000, 999999);
+
             AppUser appUser = new AppUser()
             {
                 Name = userRegisterDto.Name,
                 Surname = userRegisterDto.Surname,
                 UserName = userRegisterDto.Username,
-                Email = userRegisterDto.Email
+                Email = userRegisterDto.Email,
+                ConfirmCode = confirmCode
             };
-            var result = await _userManager.CreateAsync(appUser,userRegisterDto.Password);
+
+            var result = await _userManager.CreateAsync(appUser, userRegisterDto.Password);
+
             if (result.Succeeded)
             {
-                return RedirectToAction("UserList");
+                // 📧 BURADA MAIL GÖNDERİLECEK
+                // Email: userRegisterDto.Email
+                // İçerik: confirmCode
+
+                // Örnek mesaj (şimdilik)
+                TempData["MailInfo"] = "Doğrulama kodunuz email adresinize gönderildi.";
+
+                return RedirectToAction("EmailConfirm");
             }
-            else
+
+            foreach (var item in result.Errors)
             {
-                foreach(var item in result.Errors)
-                {
-                    ModelState.AddModelError("", item.Description);
-                }
+                ModelState.AddModelError("", item.Description);
             }
+
             return View();
         }
+
+        public IActionResult EmailConfirmed()
+        {
+            return View();
+        }
+
     }
 }

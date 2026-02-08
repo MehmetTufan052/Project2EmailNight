@@ -22,7 +22,7 @@ namespace Project2EmailNight.Dtos
         public string Username { get; set; }
 
         [Range(typeof(bool), "true", "true",
-      ErrorMessage = "Şartları kabul etmelisiniz")]
+        ErrorMessage = "Şartları kabul etmelisiniz")]
         public bool AcceptTerms { get; set; }
     }
 }

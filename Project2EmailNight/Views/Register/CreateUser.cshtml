@@ -28,13 +28,13 @@
 </div> *@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 
 <head>
 	<!-- Required meta tags -->
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-	<title>Syndash - Bootstrap4 Admin Template</title>
+	<title>Kayıt Ol - Syndash</title>
 	<!--favicon-->
 	<link rel="icon" href="~/vertical-20260127T171413Z-3-001/vertical/assets/images/favicon-32x32.png" type="image/png" />
 	<!-- loader-->
@@ -47,24 +47,48 @@
 	<link rel="stylesheet" href="~/vertical-20260127T171413Z-3-001/vertical/assets/css/icons.css" />
 	<!-- App CSS -->
 	<link rel="stylesheet" href="~/vertical-20260127T171413Z-3-001/vertical/assets/css/app.css" />
+	<style>
+		/* Ekranı tam yükseklikte tut */
+		.section-authentication-register {
+			min-height: 100vh;
+		}
+		/* Kartın yüksekliğini ayarla */
+		.card.radius-15 {
+			max-height: 95vh;
+		}
+		/* Sol tarafı scrollable yap */
+		.register-form-container {
+			max-height: 95vh;
+			overflow-y: auto;
+		}
+		/* Sağ tarafı tam yükseklikte göster */
+		.bg-login-color {
+			min-height: 95vh;
+		}
+	</style>
 </head>
 
 <body class="bg-register">
 	<!-- wrapper -->
 	<div class="wrapper">
-		<div class="section-authentication-register d-flex align-items-center justify-content-center">
-			<div class="row">
-				<div class="col-12 col-lg-10 mx-auto">
-					<div class="card radius-15 overflow-hidden">
-						<div class="row g-0">
-							<div class="col-xl-6">
-								<div class="card-body p-md-5">
-									<div class="text-center">
-										<img src="~/vertical-20260127T171413Z-3-001/vertical/assets/images/logo-icon.png" width="80" alt="">
-										<h3 class="mt-4 font-weight-bold">Hesap Oluşturun</h3>
-									</div>
-									<div class="">
-										
+		<div class="section-authentication-register d-flex align-items-center justify-content-center py-4">
+			<div class="container-fluid">
+				<div class="row justify-content-center">
+					<div class="col-12 col-xl-10 col-xxl-9">
+						<div class="card radius-15 overflow-hidden">
+							<div class="row g-0">
+								<!-- Sol Taraf - Form -->
+								<div class="col-xl-6">
+									<div class="card-body p-md-5 register-form-container">
+										<div class="text-center">
+											<img src="~/vertical-20260127T171413Z-3-001/vertical/assets/images/logo-icon.png" width="80" alt="">
+											<h3 class="mt-4 font-weight-bold">Hesap Oluşturun</h3>
+										</div>
+
+										<div class="login-separater text-center my-4">
+											<hr>
+										</div>
+
 										<div class="form-body">
 											<form class="row g-3" id="registerForm">
 												<div class="col-12">
@@ -82,31 +106,43 @@
 												<div class="col-12">
 													<label for="inputPassword" class="form-label">Şifreniz</label>
 													<div class="input-group" id="show_hide_password">
-														<input type="password" class="form-control border-end-0" id="inputPassword" name="password" placeholder="Şifrenizi Giriniz" required> <a href="javascript:;" class="input-group-text bg-transparent"><i class="bx bx-hide"></i></a>
+														<input type="password" class="form-control border-end-0" id="inputPassword" name="password" placeholder="Şifrenizi Giriniz" required>
+														<a href="javascript:;" class="input-group-text bg-transparent"><i class="bx bx-hide"></i></a>
+													</div>
+												</div>
+												<div class="col-12">
+													<label for="inputPasswordConfirm" class="form-label">Şifre Onayı</label>
+													<div class="input-group" id="show_hide_password_confirm">
+														<input type="password" class="form-control border-end-0" id="inputPasswordConfirm" name="passwordConfirm" placeholder="Şifrenizi Tekrar Giriniz" required>
+														<a href="javascript:;" class="input-group-text bg-transparent"><i class="bx bx-hide"></i></a>
 													</div>
 												</div>
 												<div class="col-12">
 													<div class="form-check form-switch">
 														<input class="form-check-input" type="checkbox" id="termsCheckbox" required>
-														<label class="form-check-label" for="termsCheckbox">I read and agree to <a href="javascript:;" id="termsLink">Terms & Conditions</a></label>
+														<label class="form-check-label" for="termsCheckbox"><a href="javascript:;" id="termsLink">Şartlar ve Koşulları</a> okudum ve kabul ediyorum.</label>
 													</div>
 												</div>
 												<div class="col-12">
 													<div class="d-grid">
-														<button type="submit" class="btn btn-primary"><i class="bx bx-user me-1"></i>Sign up</button>
+														<button type="submit" class="btn btn-primary"><i class="bx bx-user me-1"></i>Kayıt Ol</button>
 													</div>
+												</div>
+												<div class="col-12 text-center">
+													<p class="mb-0">Zaten hesabınız var mı? <a href="login.html">Giriş Yapın</a></p>
 												</div>
 											</form>
 										</div>
 									</div>
+								</div>
 
+								<!-- Sağ Taraf - Görsel -->
+								<div class="col-xl-6 bg-login-color d-flex align-items-center justify-content-center">
+									<img src="~/vertical-20260127T171413Z-3-001/vertical/assets/images/login-images/register-frent-img.jpg" class="img-fluid" alt="Register Image">
 								</div>
 							</div>
-							<div class="col-xl-6 bg-login-color d-flex align-items-center justify-content-center">
-								<img src="~/vertical-20260127T171413Z-3-001/vertical/assets/images/login-images/register-frent-img.jpg" class="img-fluid" alt="...">
-							</div>
+							<!--end row-->
 						</div>
-						<!--end row-->
 					</div>
 				</div>
 			</div>
@@ -118,41 +154,41 @@
 		<div class="modal-dialog modal-lg modal-dialog-scrollable">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="termsModalLabel">Terms & Conditions</h5>
+					<h5 class="modal-title" id="termsModalLabel">Şartlar ve Koşullar</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<h6 class="fw-bold">Terms of Service</h6>
-					<p>Welcome to our service. By registering an account, you agree to comply with and be bound by the following terms and conditions.</p>
+					<h6 class="fw-bold">Kullanım Şartları</h6>
+					<p>Hizmetimize hoş geldiniz. Bir hesap oluşturarak, aşağıdaki hüküm ve koşullara uymayı ve bunlara bağlı kalmayı kabul etmiş olursunuz.</p>
 
-					<h6 class="fw-bold mt-4">1. Account Registration</h6>
-					<p>You must provide accurate and complete information during the registration process. You are responsible for maintaining the confidentiality of your account credentials.</p>
+					<h6 class="fw-bold mt-4">1. Hesap Kaydı</h6>
+					<p>Kayıt işlemi sırasında doğru ve eksiksiz bilgiler vermelisiniz. Hesap kimlik bilgilerinizin gizliliğini korumaktan siz sorumlusunuz.</p>
 
-					<h6 class="fw-bold mt-4">2. User Responsibilities</h6>
-					<p>You agree to use our service only for lawful purposes and in accordance with these terms. You must not use our service in any way that violates any applicable laws or regulations.</p>
+					<h6 class="fw-bold mt-4">2. Kullanıcı Sorumlulukları</h6>
+					<p>Hizmetimizi yalnızca yasal amaçlar için ve bu şartlara uygun olarak kullanmayı kabul edersiniz. Hizmetimizi geçerli yasaları veya düzenlemeleri ihlal edecek şekilde kullanmamalısınız.</p>
 
-					<h6 class="fw-bold mt-4">3. Privacy Policy</h6>
-					<p>We are committed to protecting your privacy. Your personal information will be collected, used, and stored in accordance with our Privacy Policy.</p>
+					<h6 class="fw-bold mt-4">3. Gizlilik Politikası</h6>
+					<p>Gizliliğinizi korumaya kararlıyız. Kişisel bilgileriniz, Gizlilik Politikamıza uygun olarak toplanacak, kullanılacak ve saklanacaktır.</p>
 
-					<h6 class="fw-bold mt-4">4. Data Collection</h6>
-					<p>We collect information that you provide directly to us, including your name, email address, and any other information you choose to provide.</p>
+					<h6 class="fw-bold mt-4">4. Veri Toplama</h6>
+					<p>Doğrudan bize sağladığınız bilgileri, adınız, e-posta adresiniz ve sağlamayı seçtiğiniz diğer bilgileri topluyoruz.</p>
 
-					<h6 class="fw-bold mt-4">5. Data Usage</h6>
-					<p>Your data will be used to provide and improve our services, communicate with you, and ensure the security of our platform.</p>
+					<h6 class="fw-bold mt-4">5. Veri Kullanımı</h6>
+					<p>Verileriniz hizmetlerimizi sağlamak ve geliştirmek, sizinle iletişim kurmak ve platformumuzun güvenliğini sağlamak için kullanılacaktır.</p>
 
-					<h6 class="fw-bold mt-4">6. Data Protection</h6>
-					<p>We implement appropriate technical and organizational measures to protect your personal data against unauthorized access, alteration, or destruction.</p>
+					<h6 class="fw-bold mt-4">6. Veri Koruma</h6>
+					<p>Kişisel verilerinizi yetkisiz erişime, değiştirmeye veya imhaya karşı korumak için uygun teknik ve organizasyonel önlemleri uyguluyoruz.</p>
 
-					<h6 class="fw-bold mt-4">7. Termination</h6>
-					<p>We reserve the right to terminate or suspend your account at any time if you violate these terms or engage in any prohibited activities.</p>
+					<h6 class="fw-bold mt-4">7. Fesih</h6>
+					<p>Bu şartları ihlal ederseniz veya yasaklanmış faaliyetlerde bulunursanız, hesabınızı herhangi bir zamanda feshetme veya askıya alma hakkını saklı tutarız.</p>
 
-					<h6 class="fw-bold mt-4">8. Changes to Terms</h6>
-					<p>We may update these terms from time to time. Continued use of our service after changes constitutes acceptance of the updated terms.</p>
+					<h6 class="fw-bold mt-4">8. Şartlarda Değişiklik</h6>
+					<p>Bu şartları zaman zaman güncelleyebiliriz. Değişikliklerden sonra hizmetimizi kullanmaya devam etmeniz, güncellenmiş şartları kabul ettiğiniz anlamına gelir.</p>
 
-					<p class="mt-4"><strong>Last updated: February 2026</strong></p>
+					<p class="mt-4"><strong>Son güncelleme: Şubat 2026</strong></p>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
 				</div>
 			</div>
 		</div>
@@ -165,7 +201,7 @@
 
 	<script>
 		$(document).ready(function () {
-			// Password show/hide functionality
+			// Password show/hide functionality - İlk şifre alanı
 			$("#show_hide_password a").on('click', function (event) {
 				event.preventDefault();
 				if ($('#show_hide_password input').attr("type") == "text") {
@@ -176,6 +212,20 @@
 					$('#show_hide_password input').attr('type', 'text');
 					$('#show_hide_password i').removeClass("bx-hide");
 					$('#show_hide_password i').addClass("bx-show");
+				}
+			});
+
+			// Password show/hide functionality - Şifre onay alanı
+			$("#show_hide_password_confirm a").on('click', function (event) {
+				event.preventDefault();
+				if ($('#show_hide_password_confirm input').attr("type") == "text") {
+					$('#show_hide_password_confirm input').attr('type', 'password');
+					$('#show_hide_password_confirm i').addClass("bx-hide");
+					$('#show_hide_password_confirm i').removeClass("bx-show");
+				} else if ($('#show_hide_password_confirm input').attr("type") == "password") {
+					$('#show_hide_password_confirm input').attr('type', 'text');
+					$('#show_hide_password_confirm i').removeClass("bx-hide");
+					$('#show_hide_password_confirm i').addClass("bx-show");
 				}
 			});
 
@@ -192,7 +242,22 @@
 
 				// Check if terms checkbox is checked
 				if (!$('#termsCheckbox').is(':checked')) {
-					alert('You must agree to the Terms & Conditions to register.');
+					alert('Şartlar ve Koşulları kabul etmelisiniz.');
+					return false;
+				}
+
+				// Check if passwords match
+				var password = $('#inputPassword').val();
+				var passwordConfirm = $('#inputPasswordConfirm').val();
+
+				if (password !== passwordConfirm) {
+					alert('Şifreler eşleşmiyor! Lütfen tekrar kontrol edin.');
+					return false;
+				}
+
+				// Password strength check (minimum 6 karakter)
+				if (password.length < 6) {
+					alert('Şifreniz en az 6 karakter olmalıdır.');
 					return false;
 				}
 
@@ -201,22 +266,22 @@
 					name: $('#inputName').val(),
 					surname: $('#inputSurname').val(),
 					email: $('#inputEmail').val(),
-					password: $('#inputPassword').val()
+					password: password
 				};
 
 				// AJAX call to register user
 				$.ajax({
-					url: 'your-api-endpoint/register.php', // Backend endpoint'inizi buraya yazın
+					url: 'your-api-endpoint/register', // Backend endpoint'inizi buraya yazın
 					type: 'POST',
 					data: JSON.stringify(formData),
 					contentType: 'application/json',
 					success: function(response) {
-						alert('Registration successful! Please check your email for confirmation.');
+						alert('Kayıt başarılı! Lütfen email adresinizi kontrol edin.');
 						// Redirect to login or other page
 						// window.location.href = 'login.html';
 					},
 					error: function(xhr, status, error) {
-						alert('Registration failed: ' + error);
+						alert('Kayıt başarısız: ' + error);
 					}
 				});
 			});
