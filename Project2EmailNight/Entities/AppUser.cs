@@ -9,6 +9,6 @@ namespace Project2EmailNight.Entities
         public string? ImageUrl { get; set; }
         public string? About { get; set; }
 
-        public int ConfirmCode { get; set; }
+        public int? ConfirmCode { get; set; }
     }
 }

@@ -18,11 +18,14 @@ namespace Project2EmailNight.Dtos
         [MinLength(6, ErrorMessage = "Şifre en az 6 karakter olmalı")]
         public string Password { get; set; }
 
+        [Required(ErrorMessage = "Şifre onayı zorunludur")]
+        [Compare("Password", ErrorMessage = "Şifreler uyuşmuyor")]
+        public string PasswordConfirm { get; set; }
+
         [Required(ErrorMessage = "Kullanıcı adı zorunludur")]
         public string Username { get; set; }
 
-        [Range(typeof(bool), "true", "true",
-        ErrorMessage = "Şartları kabul etmelisiniz")]
-        public bool AcceptTerms { get; set; }
+        [Required(ErrorMessage = "Şartları kabul etmelisiniz")]
+        public bool? AcceptTerms { get; set; }
     }
 }

@@ -90,38 +90,62 @@
 										</div>
 
 										<div class="form-body">
-											<form class="row g-3" id="registerForm">
+											<form asp-action ="CreateUser" asp-controller="Register" method="post" class="row g-3">
+												<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
 												<div class="col-12">
 													<label for="inputName" class="form-label">Adınız</label>
-													<input type="text" class="form-control" id="inputName" name="name" placeholder="Adınız" required>
+													<input asp-for="Name" class="form-control" />
 												</div>
 												<div class="col-12">
 													<label for="inputSurname" class="form-label">Soyadınız</label>
-													<input type="text" class="form-control" id="inputSurname" name="surname" placeholder="Soyadınız" required>
+													<input asp-for="Surname" class="form-control" />
+												</div>
+												<div class="col-12">
+													<label for="inputUsername" class="form-label">Kullanıcı Adınız</label>
+													<input asp-for="Username" class="form-control" />
 												</div>
 												<div class="col-12">
 													<label for="inputEmail" class="form-label">Email Adresiniz</label>
-													<input type="email" class="form-control" id="inputEmail" name="email" placeholder="Email Adresiniz" required>
+													<input asp-for="Email" class="form-control" />
 												</div>
 												<div class="col-12">
 													<label for="inputPassword" class="form-label">Şifreniz</label>
 													<div class="input-group" id="show_hide_password">
-														<input type="password" class="form-control border-end-0" id="inputPassword" name="password" placeholder="Şifrenizi Giriniz" required>
+														<input asp-for="Password" class="form-control" type="password" required />
+														<span asp-validation-for="Password" class="text-danger"></span>
+
 														<a href="javascript:;" class="input-group-text bg-transparent"><i class="bx bx-hide"></i></a>
 													</div>
 												</div>
 												<div class="col-12">
 													<label for="inputPasswordConfirm" class="form-label">Şifre Onayı</label>
 													<div class="input-group" id="show_hide_password_confirm">
-														<input type="password" class="form-control border-end-0" id="inputPasswordConfirm" name="passwordConfirm" placeholder="Şifrenizi Tekrar Giriniz" required>
+														<input asp-for="PasswordConfirm" class="form-control" type="password" />
+														<span asp-validation-for="PasswordConfirm" class="text-danger"></span>
 														<a href="javascript:;" class="input-group-text bg-transparent"><i class="bx bx-hide"></i></a>
 													</div>
 												</div>
 												<div class="col-12">
-													<div class="form-check form-switch">
-														<input class="form-check-input" type="checkbox" id="termsCheckbox" required>
-														<label class="form-check-label" for="termsCheckbox"><a href="javascript:;" id="termsLink">Şartlar ve Koşulları</a> okudum ve kabul ediyorum.</label>
+													<div class="form-check">
+														<input type="checkbox"
+															   class="form-check-input"
+															   id="AcceptTerms"
+															   name="AcceptTerms"
+															   value="true" />
+
+														<label class="form-check-label" for="AcceptTerms">
+															Şartları okudum kabul ediyorum
+														</label>
 													</div>
+
+													<span asp-validation-for="AcceptTerms" class="text-danger"></span>
+
+
+													<span asp-validation-for="AcceptTerms" class="text-danger"></span>
+
+														@* <label class="form-check-label" for="termsCheckbox"><a href="javascript:;" id="termsLink">Şartlar ve Koşulları</a> okudum ve kabul ediyorum.</label> *@
+													
 												</div>
 												<div class="col-12">
 													<div class="d-grid">
@@ -198,6 +222,9 @@
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	<script src="~/vertical-20260127T171413Z-3-001/vertical/assets/js/jquery.min.js"></script>
 	<script src="~/vertical-20260127T171413Z-3-001/vertical/assets/js/bootstrap.bundle.min.js"></script>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+	<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
 	<script>
 		$(document).ready(function () {
@@ -236,57 +263,11 @@
 				termsModal.show();
 			});
 
-			// Form submit
-			$("#registerForm").on('submit', function (event) {
-				event.preventDefault();
-
-				// Check if terms checkbox is checked
-				if (!$('#termsCheckbox').is(':checked')) {
-					alert('Şartlar ve Koşulları kabul etmelisiniz.');
-					return false;
-				}
-
-				// Check if passwords match
-				var password = $('#inputPassword').val();
-				var passwordConfirm = $('#inputPasswordConfirm').val();
-
-				if (password !== passwordConfirm) {
-					alert('Şifreler eşleşmiyor! Lütfen tekrar kontrol edin.');
-					return false;
-				}
-
-				// Password strength check (minimum 6 karakter)
-				if (password.length < 6) {
-					alert('Şifreniz en az 6 karakter olmalıdır.');
-					return false;
-				}
-
-				// Collect form data
-				var formData = {
-					name: $('#inputName').val(),
-					surname: $('#inputSurname').val(),
-					email: $('#inputEmail').val(),
-					password: password
-				};
-
-				// AJAX call to register user
-				$.ajax({
-					url: 'your-api-endpoint/register', // Backend endpoint'inizi buraya yazın
-					type: 'POST',
-					data: JSON.stringify(formData),
-					contentType: 'application/json',
-					success: function(response) {
-						alert('Kayıt başarılı! Lütfen email adresinizi kontrol edin.');
-						// Redirect to login or other page
-						// window.location.href = 'login.html';
-					},
-					error: function(xhr, status, error) {
-						alert('Kayıt başarısız: ' + error);
-					}
-				});
-			});
+			
 		});
 	</script>
+	
+
 </body>
 
 </html>

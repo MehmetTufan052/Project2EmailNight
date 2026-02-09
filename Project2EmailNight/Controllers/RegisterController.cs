@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
 using Project2EmailNight.Dtos;
 using Project2EmailNight.Entities;
 
@@ -22,6 +24,11 @@ namespace Project2EmailNight.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser(UserRegisterDto userRegisterDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(userRegisterDto);
+            }
+
             Random random = new Random();
             int confirmCode = random.Next(100000, 999999);
 
@@ -31,20 +38,39 @@ namespace Project2EmailNight.Controllers
                 Surname = userRegisterDto.Surname,
                 UserName = userRegisterDto.Username,
                 Email = userRegisterDto.Email,
-                ConfirmCode = confirmCode
+                ConfirmCode = confirmCode,
+                EmailConfirmed = false
+
             };
 
             var result = await _userManager.CreateAsync(appUser, userRegisterDto.Password);
 
             if (result.Succeeded)
             {
-                // 📧 BURADA MAIL GÖNDERİLECEK
-                // Email: userRegisterDto.Email
-                // İçerik: confirmCode
+                MimeMessage mimeMessage = new MimeMessage();
+                mimeMessage.From.Add(new MailboxAddress("Syndash", "tufaneser8@gmail.com"));
+                mimeMessage.To.Add(new MailboxAddress("User", userRegisterDto.Email));
+                mimeMessage.Subject = "Syndash Email Doğrulama Kodu";
 
-                // Örnek mesaj (şimdilik)
+                BodyBuilder bodyBuilder = new BodyBuilder();
+                bodyBuilder.HtmlBody =
+                $@"
+                <h3>Syndash Email Doğrulama</h3>
+                <p>Doğrulama kodunuz:</p>
+                <h2>{confirmCode}</h2>
+                <p><b>Bu kodu kimseyle paylaşmayın.</b></p>";
+
+                mimeMessage.Body = bodyBuilder.ToMessageBody();
+
+                using (SmtpClient smtpClient = new SmtpClient())
+                {
+                    smtpClient.Connect("smtp.gmail.com", 587, false);
+                    smtpClient.Authenticate("tufaneser8@gmail.com", "rghp xhld nktr pxmb");
+                    smtpClient.Send(mimeMessage);
+                    smtpClient.Disconnect(true);
+                }
+
                 TempData["MailInfo"] = "Doğrulama kodunuz email adresinize gönderildi.";
-
                 return RedirectToAction("EmailConfirm");
             }
 
@@ -53,13 +79,43 @@ namespace Project2EmailNight.Controllers
                 ModelState.AddModelError("", item.Description);
             }
 
-            return View();
+            return View(userRegisterDto);
         }
 
-        public IActionResult EmailConfirmed()
+        [HttpGet]
+        public IActionResult EmailConfirm()
         {
             return View();
         }
+        
+        
+        [HttpPost]
+        public async Task<IActionResult> EmailConfirm(string Email, int ConfirmCode)
+        {
+            Console.WriteLine("POST EmailConfirm çalıştı");
+
+            var user = await _userManager.FindByEmailAsync(Email);
+
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Kullanıcı bulunamadı.");
+                return View();
+            }
+
+            if (user.ConfirmCode != ConfirmCode)
+            {
+                ModelState.AddModelError("", "Doğrulama kodu hatalı.");
+                return View();
+            }
+
+            user.EmailConfirmed = true;
+            user.ConfirmCode = null;
+
+            await _userManager.UpdateAsync(user);
+
+            return RedirectToAction("Index", "Login");
+        }
+
 
     }
 }

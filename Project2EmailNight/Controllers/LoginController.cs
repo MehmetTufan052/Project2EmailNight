@@ -8,9 +8,11 @@ namespace Project2EmailNight.Controllers
     public class LoginController : Controller
     {
         private readonly SignInManager<AppUser> _signInManager;
-        public LoginController(SignInManager<AppUser> signInManager)
+        private readonly UserManager<AppUser> _userManager;
+        public LoginController(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager)
         {
-            _signInManager= signInManager;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -22,11 +24,36 @@ namespace Project2EmailNight.Controllers
         [HttpPost]
         public async Task<IActionResult> UserLogin(UserLoginDto userLoginDto)
         {
-            var result = await _signInManager.PasswordSignInAsync(userLoginDto.Username, userLoginDto.Password, true, false);
+            var user = await _userManager.FindByNameAsync(userLoginDto.Username);
+
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Kullanıcı adı veya şifre hatalı.");
+                return View();
+            }
+
+            
+            if (!user.EmailConfirmed)
+            {
+                ModelState.AddModelError("", "Email adresinizi doğrulamadan giriş yapamazsınız.");
+                return View();
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(
+                userLoginDto.Username,
+                userLoginDto.Password,
+                true,
+                false
+            );
+
             if (result.Succeeded)
             {
-                return RedirectToAction("Index","Profile");
+                return RedirectToAction("Index", "Profile");
             }
+
+
+
+            ModelState.AddModelError("", "Kullanıcı adı veya şifre hatalı.");
             return View();
         }
     }
