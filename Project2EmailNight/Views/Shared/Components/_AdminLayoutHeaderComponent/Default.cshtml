@@ -1,6 +1,12 @@
-﻿
+﻿@using Project2EmailNight.Dtos
+@model UserHeaderUIDto
 @{
     Layout = null;
+}
+
+@if (Model == null)
+{
+	return;
 }
 
 <header class="top-header">
@@ -383,10 +389,11 @@
 					<a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="javascript:;" data-bs-toggle="dropdown">
 						<div class="d-flex user-box align-items-center">
 							<div class="user-info">
-								<p class="user-name mb-0">Jessica Doe</p>
+								<p class="user-name mb-0">@Model.FullName</p>
 								<p class="designattion mb-0">Çevrimiçi</p>
 							</div>
-							<img src="~/vertical-20260127T171413Z-3-001/vertical/assets/images/avatars/avatar-1.png" class="user-img" alt="user avatar">
+							<img src="@Url.Content(Model.ImageUrl)" class="user-img" alt="user avatar">
+
 						</div>
 					</a>
 					<div class="dropdown-menu dropdown-menu-end">
