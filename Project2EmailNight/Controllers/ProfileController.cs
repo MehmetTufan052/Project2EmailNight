@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Project2EmailNight.Dtos;
 using Project2EmailNight.Entities;
@@ -14,6 +15,7 @@ namespace Project2EmailNight.Controllers
             _userManager = userManager;
         }
 
+       
         public async Task<IActionResult> Index()
         {
             var values = await _userManager.FindByNameAsync(User.Identity.Name);

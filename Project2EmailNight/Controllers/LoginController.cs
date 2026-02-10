@@ -24,37 +24,39 @@ namespace Project2EmailNight.Controllers
         [HttpPost]
         public async Task<IActionResult> UserLogin(UserLoginDto userLoginDto)
         {
+            if (!ModelState.IsValid)
+                return View(userLoginDto);
+
             var user = await _userManager.FindByNameAsync(userLoginDto.Username);
 
+            // 1️⃣ Kullanıcı yoksa
             if (user == null)
             {
                 ModelState.AddModelError("", "Kullanıcı adı veya şifre hatalı.");
-                return View();
+                return View(userLoginDto);
             }
 
-            
+            // 2️⃣ Şifre doğru mu?
+            var passwordCorrect = await _userManager.CheckPasswordAsync(
+                user, userLoginDto.Password);
+
+            if (!passwordCorrect)
+            {
+                ModelState.AddModelError("", "Kullanıcı adı veya şifre hatalı.");
+                return View(userLoginDto);
+            }
+
+            // 3️⃣ Email onaylı mı?
             if (!user.EmailConfirmed)
             {
-                ModelState.AddModelError("", "Email adresinizi doğrulamadan giriş yapamazsınız.");
-                return View();
+                ModelState.AddModelError("", "Lütfen email adresinizi onaylayınız.");
+                return View(userLoginDto);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(
-                userLoginDto.Username,
-                userLoginDto.Password,
-                true,
-                false
-            );
+            // 4️⃣ Giriş
+            await _signInManager.SignInAsync(user, isPersistent: true);
 
-            if (result.Succeeded)
-            {
-                return RedirectToAction("Index", "Profile");
-            }
-
-
-
-            ModelState.AddModelError("", "Kullanıcı adı veya şifre hatalı.");
-            return View();
+            return RedirectToAction("Index", "Profile");
         }
     }
 }
