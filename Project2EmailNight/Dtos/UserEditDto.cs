@@ -17,5 +17,8 @@ namespace Project2EmailNight.Dtos
         [BindNever]
         public string ImageUrl { get; set; }
         public IFormFile Image { get; set; }
+
+        public int DraftCount { get; set; }
+        public int StarredCount { get; set; }
     }
 }

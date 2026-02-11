@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
+using Project2EmailNight.Context;
 using Project2EmailNight.Dtos;
 using Project2EmailNight.Entities;
 
@@ -10,10 +12,12 @@ namespace Project2EmailNight.Controllers
     public class ProfileController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly EmailContext _context;
 
-        public ProfileController(UserManager<AppUser> userManager)
+        public ProfileController(UserManager<AppUser> userManager, EmailContext context)
         {
             _userManager = userManager;
+            _context = context;
         }
 
 
@@ -28,12 +32,18 @@ namespace Project2EmailNight.Controllers
                 Email = user.Email,
                 ImageUrl = string.IsNullOrEmpty(user.ImageUrl)
                     ? "/assets/images/avatars/avatar-1.png"
-                    : user.ImageUrl
+                    : user.ImageUrl,
+
+             DraftCount = _context.Messages
+            .Count(x => x.SenderEmail == user.Email && x.IsDraft==true),
+
+                StarredCount = _context.Messages
+            .Count(x => x.ReceiverEmail == user.Email && x.IsStarred==true)
             };
 
             return View(dto);
         }
-        
+
 
         [HttpPost]
         public async Task<IActionResult> Index(UserEditDto userEditDto)
@@ -65,7 +75,6 @@ namespace Project2EmailNight.Controllers
                 using var stream = new FileStream(saveLocation, FileMode.Create);
                 await userEditDto.Image.CopyToAsync(stream);
 
-                // 🔥 EN KRİTİK SATIR
                 user.ImageUrl = "/images/" + imageName;
 
                 var result = await _userManager.UpdateAsync(user);
@@ -75,7 +84,7 @@ namespace Project2EmailNight.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
-                
+
             }
             return View(userEditDto);
         }

@@ -15,21 +15,12 @@
 	<div class="wrapper">
         <!--sidebar-wrapper-->
         @RenderBody()
-		<div class="sidebar-wrapper" data-simplebar="true">
-			<div class="sidebar-header">
-				<div class="">
-					<img src="~/vertical-20260127T171413Z-3-001/vertical/assets/images/logo-icon.png" class="logo-icon-2" alt="" />
-				</div>
-				<div>
-					<h4 class="logo-text">Syndash</h4>
-				</div>
-				<a href="javascript:;" class="toggle-btn ms-auto"> <i class="bx bx-menu"></i>
-				</a>
-			</div>
+		@* <div class="sidebar-wrapper" data-simplebar="true"> *@
+
 			<!--navigation-->
-			@await Component.InvokeAsync("_AdminLayoutNavbarComponent")
+@* 			@await Component.InvokeAsync("_AdminLayoutNavbarComponent") *@
 			<!--end navigation-->
-		</div>
+		@* </div> *@
 		<!--end sidebar-wrapper-->
 		<!--header-->
         @await Component.InvokeAsync("_AdminLayoutHeaderComponent")
