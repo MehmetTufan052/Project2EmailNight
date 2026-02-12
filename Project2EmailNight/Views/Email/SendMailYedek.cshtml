@@ -1,8 +1,18 @@
-﻿@model Project2EmailNight.Dtos.MailRequestDto
+﻿
+@{
+    Layout = null;
+}
+
+@* @model Project2EmailNight.Dtos.MailRequestDto
 @{
     ViewData["Title"] = "SendEmail";
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+
+
+<!DOCTYPE html>
+<html lang="en">
+
 <body>
 	<!-- wrapper -->
 	<div class="wrapper">
@@ -95,7 +105,7 @@
 										</div>
 										<div class="">
 											<p class="mb-0">The point of using Lorem Ipsum is that it has a more-or-less normal...</p>
-										</div>
+									@* 	</div>
 										<div class="ms-auto">
 											<p class="mb-0 email-time">5:45 PM</p>
 										</div>
@@ -195,7 +205,7 @@
 									<div class="d-md-flex align-items-center email-message px-3 py-1 bg-body">
 										<div class="d-flex align-items-center email-actions">
 											<input class="form-check-input" type="checkbox" value="" /> <i class='bx bx-star font-20 mx-2 email-star'></i>
-											<p class="mb-0"><b>Tata India</b>
+											@* <p class="mb-0"><b>Tata India</b>
 											</p>
 										</div>
 										<div class="">
@@ -217,11 +227,11 @@
 											<p class="mb-0">At vero eos et accusamus et iusto odio dignissimos ducimus...</p>
 										</div>
 										<div class="ms-auto">
-											<p class="mb-0 email-time">1:30 PM</p> 
-		</div>
+											<p class="mb-0 email-time">1:30 PM</p> *@ 
+@* 		</div>
 									</div>
-								</a>
-<a href="emailread.html">
+								</a> *@
+@* <a href="emailread.html">
 									<div class="d-md-flex align-items-center email-message px-3 py-1">
 										<div class="d-flex align-items-center email-actions">
 											<input class="form-check-input" type="checkbox" value="" /> <i class='bx bx-star font-20 mx-2 email-star'></i>
@@ -450,50 +460,50 @@
 						</div>
 					</div>
 					<!--start compose mail-->
-						<div class="compose-mail-popup">
-							<div class="card">
-								<div class="card-header bg-dark text-white py-2 cursor-pointer">
-									<div class="d-flex align-items-center">
-										<div class="compose-mail-title">Yeni Mesaj</div>
-										<div class="compose-mail-close ms-auto">x</div>
-									</div>
-								</div>
-
-								<div class="card-body">
-									<form method="post" asp-action="SendEmail" asp-controller="Email">
-
-										<div class="mb-3">
-											<input type="text" class="form-control"
-												   asp-for="ReceiverEmail"
-												   placeholder="Kime" />
-										</div>
-
-										<div class="mb-3">
-											<input type="text" class="form-control"
-												   asp-for="Subject"
-												   placeholder="Konu" />
-										</div>
-
-										<div class="mb-3">
-											<div id="editor" style="height: 250px;"></div>
-
-											<input type="hidden" asp-for="MessageDetail" id="MessageDetail" />
-
-
-										</div>
-
-										<div class="text-end">
-											<button type="submit" class="btn btn-primary">
-												Gönder
-											</button>
-										</div>
-
-									</form>
+					<div class="compose-mail-popup">
+						<div class="card">
+							<div class="card-header bg-dark text-white py-2 cursor-pointer">
+								<div class="d-flex align-items-center">
+									<div class="compose-mail-title">Yeni Mesaj</div>
+									<div class="compose-mail-close ms-auto">x</div>
 								</div>
 							</div>
-						</div>
-											
-	<div class="ms-auto">
+							<div class="card-body">
+								<div class="email-form">
+									<div class="mb-3">
+										<input type="text" class="form-control" placeholder="Kime" />
+									</div>
+									<div class="mb-3">
+										<input type="text" class="form-control" placeholder="Konu" />
+									</div>
+									<div class="mb-3">
+										<textarea class="form-control" placeholder="Mesaj" rows="10" cols="10"></textarea>
+									</div>
+									<div class="mb-0">
+									@* 	<div class="d-flex align-items-center">
+											<div class="">
+												<div class="btn-group">
+													<button type="button" class="btn btn-primary">Action</button>
+													<button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
+													</button>
+													<div class="dropdown-menu">	<a class="dropdown-item" href="javascript:;">Action</a>
+														<a class="dropdown-item" href="javascript:;">Another action</a>
+														<a class="dropdown-item" href="javascript:;">Something else here</a>
+														<div class="dropdown-divider"></div>	<a class="dropdown-item" href="javascript:;">Separated link</a>
+													</div>
+												</div>
+											</div>
+											<div class="ms-2">
+												<button type="button" class="btn border-0 btn-sm btn-white"><i class="lni lni-text-format"></i>
+												</button>
+												<button type="button" class="btn border-0 btn-sm btn-white"><i class='bx bx-link-alt'></i>
+												</button>
+												<button type="button" class="btn border-0 btn-sm btn-white"><i class="lni lni-emoji-tounge"></i>
+												</button>
+												<button type="button" class="btn border-0 btn-sm btn-white"><i class="lni lni-google-drive"></i>
+												</button>
+											</div> *@
+@* 	<div class="ms-auto">
 												<button type="button" class="btn border-0 btn-sm btn-white"><i class="lni lni-trash"></i>
 												</button>
 											</div>
@@ -529,44 +539,14 @@
 	
 	<script>
 		new PerfectScrollbar('.email-navigation');
-		new PerfectScrollbar('.email-list');
-</script>
-	
-
+		new PerfectScrollbar('.email-list'); *@
+@* </script> *@
 <!-- App JS -->
-	<script src="~/vertical-20260127T171413Z-3-001/vertical/assets/js/app.js"></script>
+@* 	<script src="~/vertical-20260127T171413Z-3-001/vertical/assets/js/app.js"></script> *@
+<@* /body>
 
-	<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-
-	<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
-
-	<script>
-		var quill = new Quill('#editor', {
-			theme: 'snow',
-			modules: {
-				toolbar: [
-					[{ 'header': [1, 2, false] }],
-					['bold', 'italic', 'underline'],
-					[{ 'color': [] }, { 'background': [] }],
-					['link'],
-					[{ 'list': 'ordered'}, { 'list': 'bullet' }],
-					['clean']
-				]
-			}
-		});
-
-		// Form submit edilirken HTML'i hidden input'a aktar
-		document.querySelector('form').onsubmit = function () {
-			document.querySelector('#MessageDetail').value =
-				quill.root.innerHTML;
-		};
-	</script>
-
-</body>
-
-
-	
-@*  <div class="container">
+</html> *@
+	@* <div class="container">
     <br /><br />
     <form method="post">
         <label>Alıcı Email</label>
@@ -580,5 +560,5 @@
         <br />
         <button class="btn btn-info">Mail Gönder</button>
     </form>
-</div> *@
- 
+</div>
+ *@ 

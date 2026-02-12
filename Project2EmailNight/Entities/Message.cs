@@ -11,5 +11,8 @@
         public DateTime SendDate { get; set; }
         public bool IsStarred { get; internal set; }
         public bool IsDraft { get; internal set; }
+
+        public int? EmailCategoryId { get; set; }   
+        public EmailCategory EmailCategory { get; set; }
     }
 }
