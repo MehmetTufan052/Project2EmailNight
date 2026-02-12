@@ -1,0 +1,91 @@
+﻿
+@{
+    ViewData["Title"] = "MessageDetails";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-wrapper">
+    <div class="page-content-wrapper">
+        <div class="page-content">
+
+            <div class="card shadow-sm border-0">
+
+                <!-- Header -->
+                <div class="card-header bg-white border-bottom d-flex align-items-center">
+
+                    <a asp-action="SendEmail" class="btn btn-light btn-sm me-3">
+                        <i class='bx bx-arrow-back'></i>
+                    </a>
+
+                    <h5 class="mb-0 fw-semibold">
+                        @Model.Subject
+                    </h5>
+
+                    <div class="ms-auto text-muted small">
+                        @Model.SendDate.ToString("dd MMM yyyy HH:mm")
+                    </div>
+
+                </div>
+
+                <!-- Sender Info -->
+                <div class="card-body border-bottom">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="avatar-circle me-3">
+                            @Model.SenderEmail.Substring(0, 1).ToUpper()
+                        </div>
+
+                        <div>
+                            <div class="fw-bold">
+                                @Model.SenderEmail
+                            </div>
+                            <div class="text-muted small">
+                                Alıcı: @Model.ReceiverEmail
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Message Content -->
+                <div class="card-body">
+
+                    <div class="message-content">
+                        @Html.Raw(Model.MessageDetail)
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<style>
+    .avatar-circle {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4e73df, #1cc88a);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .message-content {
+        line-height: 1.8;
+        font-size: 15px;
+    }
+
+    .card {
+        border-radius: 14px;
+    }
+</style>
+
+
+
