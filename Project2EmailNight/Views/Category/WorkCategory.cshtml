@@ -1,0 +1,104 @@
+﻿@model List<Project2EmailNight.Entities.Message>
+@{
+    ViewData["Title"] = "İş E-postaları";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<body>
+    <!-- wrapper -->
+    <div class="wrapper">
+
+        <div class="page-wrapper">
+            <!--page-content-wrapper-->
+            <div class="page-content-wrapper">
+                <div class="page-content">
+                    <div class="email-wrapper">
+                        <div class="email-sidebar">
+                            <div class="email-sidebar-header d-grid">
+                                <a href="javascript:;" class="btn btn-primary compose-mail-btn"><i class='bx bx-plus me-2'></i>Yeni Mesaj</a>
+                            </div>
+                            <div class="email-sidebar-content">
+                                <div class="email-navigation">
+                                    <h6 class="text-uppercase fw-bold p-3 mb-0 font-12 text-muted">Klasörler</h6>
+                                    <div class="list-group list-group-flush mb-3">
+                                        <a href="/Email/Inbox" class="list-group-item active d-flex align-items-center">
+                                            <i class='bx bxs-inbox me-3 font-20'></i><span>Gelen Kutusu</span>
+                                            <span class="badge bg-primary rounded-pill ms-auto">7,513</span>
+                                        </a>
+                                        <a href="/Email/Starred" class="list-group-item d-flex align-items-center">
+                                            <i class='bx bxs-star me-3 font-20'></i><span>Yıldızlılar</span>
+                                        </a>
+                                        <a href="/Email/Sent" class="list-group-item d-flex align-items-center">
+                                            <i class='bx bxs-send me-3 font-20'></i><span>Gidenler</span>
+                                        </a>
+                                        <a href="/Email/Drafts" class="list-group-item d-flex align-items-center">
+                                            <i class='bx bxs-file-blank me-3 font-20'></i><span>Taslaklar</span>
+                                            <span class="badge bg-warning text-dark rounded-pill ms-auto">4</span>
+                                        </a>
+                                        <a href="/Email/Trash" class="list-group-item d-flex align-items-center">
+                                            <i class='bx bxs-trash-alt me-3 font-20'></i><span>Silinenler</span>
+                                        </a>
+                                    </div>
+
+                                    <h6 class="text-uppercase fw-bold p-3 mb-0 font-12 text-muted">Kategoriler</h6>
+                                    <div class="list-group list-group-flush">
+                                        <br /><br />
+                                        <a href="/Category/WorkCategory" class="list-group-item active d-flex align-items-center">
+                                            <i class='bx bxs-circle me-3 font-12 text-danger'></i><span>İş E-postaları</span>
+                                            <a href="/Email/Category/Education" class="list-group-item d-flex align-items-center">
+                                                <i class='bx bxs-circle me-3 font-12 text-success'></i><span>Eğitim E-postaları</span>
+                                            </a>
+                                            <a href="/Email/Category/Family" class="list-group-item d-flex align-items-center">
+                                                <i class='bx bxs-circle me-3 font-12 text-info'></i><span>Aile E-postaları</span>
+                                            </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="email-header d-xl-flex align-items-center">
+                            <div class="d-flex align-items-center">
+                                <div class="email-toggle-btn"><i class='bx bx-menu'></i></div>
+                                <h4 class="mb-0 ms-2">İş E-postaları</h4>
+                            </div>
+                        </div>
+
+                        <div class="email-content">
+                            <div class="email-list">
+                                @if (Model != null && Model.Count > 0)
+                                {
+                                    @foreach (var item in Model)
+                                    {
+                                        <a href="/Email/MessageDetails/@item.MessageId">
+                                            <div class="d-md-flex align-items-center email-message px-3 py-1 @(item.IsStatus ? "" : "bg-body fw-bold")">
+                                                <div class="d-flex align-items-center email-actions">
+                                                    <input class="form-check-input" type="checkbox" />
+                                                    <i class='bx bx-star font-20 mx-2 email-star'></i>
+                                                    <p class="mb-0"><b>@item.SenderEmail</b></p>
+                                                </div>
+                                                <div class="">
+                                                    <p class="mb-0 text-truncate" style="max-width: 500px;">
+                                                        <span class="text-dark">@item.Subject</span> - @Html.Raw(item.MessageDetail.Length > 50 ? item.MessageDetail.Substring(0, 50) + "..." : item.MessageDetail)
+                                                    </p>
+                                                </div>
+                                                <div class="ms-auto">
+                                                    <p class="mb-0 email-time">@item.SendDate.ToString("HH:mm")</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="p-5 text-center text-muted">
+                                        <i class='bx bx-envelope font-60'></i>
+                                        <p>Bu kategoride henüz bir mesaj bulunmuyor.</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
