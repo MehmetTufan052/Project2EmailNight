@@ -7,10 +7,14 @@
         public string ReceiverEmail { get; set; }
         public string Subject { get; set; }
         public string MessageDetail { get; set; }
+
         public bool IsStatus { get; set; }
         public DateTime SendDate { get; set; }
         public bool IsStarred { get; internal set; }
         public bool IsDraft { get; internal set; }
+        public bool IsDeleted { get; set; }
+
+
 
         public int? EmailCategoryId { get; set; }   
         public EmailCategory EmailCategory { get; set; }

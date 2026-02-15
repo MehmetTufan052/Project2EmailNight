@@ -26,7 +26,9 @@ namespace Project2EmailNight.Controllers
             var user = await _userManager.GetUserAsync(User);
 
             var inboxMessages = _context.Messages
-       .Where(x => x.ReceiverEmail == user.Email)
+       .Where(x => x.ReceiverEmail == user.Email
+         && !x.IsDraft
+         && !x.IsDeleted)
        .OrderByDescending(x => x.SendDate)
        .ToList();
 
@@ -43,33 +45,36 @@ namespace Project2EmailNight.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendEmail(SendEmailPageViewModel model)
+        public async Task<IActionResult> SendEmail(SendEmailPageViewModel model, string? actionType)
         {
-            var mailRequestDto = model.MailRequest;
-
-            MimeMessage mimeMessage = new MimeMessage();
-
-
-            MailboxAddress mailboxAddressFrom = new MailboxAddress("Identity Admin", "email");
-            mimeMessage.From.Add(mailboxAddressFrom);
-
-            MailboxAddress mailboxAddressTo = new MailboxAddress("User", mailRequestDto.ReceiverEmail);
-            mimeMessage.To.Add(mailboxAddressTo);
-
-            mimeMessage.Subject = mailRequestDto.Subject;
-
-            var bodyBuilder = new BodyBuilder();
-            bodyBuilder.HtmlBody = mailRequestDto.MessageDetail;
-            mimeMessage.Body = bodyBuilder.ToMessageBody();
-
-            SmtpClient smtpClient = new SmtpClient();
-            smtpClient.Connect("smtp.gmail.com", 587, false);
-            smtpClient.Authenticate("email", "key");
-            smtpClient.Send(mimeMessage);
-            smtpClient.Disconnect(true);
+            actionType ??= "send"; // güvenlik
 
             var user = await _userManager.GetUserAsync(User);
+            var mailRequestDto = model.MailRequest;
 
+            // SADECE gönder butonuna basıldıysa SMTP çalışır
+            if (actionType == "send")
+            {
+                MimeMessage mimeMessage = new MimeMessage();
+
+                mimeMessage.From.Add(new MailboxAddress("Identity Admin", "email"));
+                mimeMessage.To.Add(new MailboxAddress("User", mailRequestDto.ReceiverEmail));
+                mimeMessage.Subject = mailRequestDto.Subject;
+
+                var bodyBuilder = new BodyBuilder();
+                bodyBuilder.HtmlBody = mailRequestDto.MessageDetail;
+                mimeMessage.Body = bodyBuilder.ToMessageBody();
+
+                using (var smtpClient = new SmtpClient())
+                {
+                    smtpClient.Connect("smtp.gmail.com", 587, false);
+                    smtpClient.Authenticate("email", "key");
+                    smtpClient.Send(mimeMessage);
+                    smtpClient.Disconnect(true);
+                }
+            }
+
+            // Taslak mı gönderim mi?
             Message message = new Message()
             {
                 SenderEmail = user.Email,
@@ -77,38 +82,179 @@ namespace Project2EmailNight.Controllers
                 Subject = mailRequestDto.Subject,
                 MessageDetail = mailRequestDto.MessageDetail,
                 SendDate = DateTime.Now,
-                IsStatus = false
+                IsStatus = false,
+                IsDraft = actionType == "draft"
             };
 
             _context.Messages.Add(message);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("SendEmail");
-
+            return RedirectToAction(actionType == "draft" ? "Drafts" : "SendEmail");
         }
-    
-    public async Task<IActionResult> MessageDetails(int id)
+
+
+
+
+
+        public async Task<IActionResult> MessageDetails(int id)
         {
-            
             var user = await _userManager.GetUserAsync(User);
 
-            var message = _context.Messages
-                .FirstOrDefault(x => x.MessageId == id
-                                  && x.ReceiverEmail == user.Email);
+            var message = await _context.Messages
+                .FirstOrDefaultAsync(x => x.MessageId == id
+                                       && x.ReceiverEmail == user.Email);
 
             if (message == null)
                 return NotFound();
 
-            // Okundu yap
-            if (message.IsStatus == false)
+            if (!message.IsStatus)
             {
                 message.IsStatus = true;
                 await _context.SaveChangesAsync();
             }
 
-            return View(message);
+            var viewModel = new MessageDetailsViewModel
+            {
+                MessageId = message.MessageId,
+                SenderEmail = message.SenderEmail,
+                ReceiverEmail = message.ReceiverEmail,
+                Subject = message.Subject,
+                MessageDetail = message.MessageDetail,
+                SendDate = message.SendDate,
+                IsStatus = message.IsStatus
+
+                
+            };
+
+            return View(viewModel);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ToggleStar(int id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var message = await _context.Messages
+                .FirstOrDefaultAsync(x => x.MessageId == id
+                                       && x.ReceiverEmail == user.Email);
+
+            if (message == null)
+                return Json(new { success = false });
+
+            message.IsStarred = !message.IsStarred;
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, isStarred = message.IsStarred });
+        }
+
+        public async Task<IActionResult> Starred()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var messages = await _context.Messages
+                .Where(x => x.IsStarred
+         && x.ReceiverEmail == user.Email
+         && !x.IsDeleted)
+                .OrderByDescending(x => x.SendDate)
+                .ToListAsync();
+
+            var model = new SendEmailPageViewModel
+            {
+                MailRequest = new MailRequestDto(),
+                InboxMessages = messages
+            };
+
+            return View("SendEmail", model);
+        }
+
+        public async Task<IActionResult> Sent()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var sentMessages = await _context.Messages
+                .Where(x => x.SenderEmail == user.Email
+         && !x.IsDraft
+         && !x.IsDeleted)
+                .OrderByDescending(x => x.SendDate)
+                .ToListAsync();
+
+            var model = new SendEmailPageViewModel
+            {
+                MailRequest = new MailRequestDto(),
+                InboxMessages = sentMessages
+            };
+
+            return View("SendEmail", model);
+        }
+        public async Task<IActionResult> Drafts()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var draftMessages = await _context.Messages
+                .Where(x => x.IsDraft
+         && x.SenderEmail == user.Email
+         && !x.IsDeleted)
+                .OrderByDescending(x => x.SendDate)
+                .ToListAsync();
+
+            var model = new SendEmailPageViewModel
+            {
+                MailRequest = new MailRequestDto(),
+                InboxMessages = draftMessages
+            };
+
+            ViewBag.PageTitle = "Taslaklar";
+
+            return View("SendEmail", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var message = await _context.Messages
+                .FirstOrDefaultAsync(x => x.MessageId == id &&
+                                         (x.ReceiverEmail == user.Email
+                                          || x.SenderEmail == user.Email));
+
+            if (message == null)
+                return Json(new { success = false });
+
+            message.IsDeleted = true;
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true });
+        }
+
+        public async Task<IActionResult> Trash()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var deletedMessages = await _context.Messages
+                .Where(x => x.IsDeleted &&
+                           (x.ReceiverEmail == user.Email
+                            || x.SenderEmail == user.Email))
+                .OrderByDescending(x => x.SendDate)
+                .ToListAsync();
+
+            var model = new SendEmailPageViewModel
+            {
+                MailRequest = new MailRequestDto(),
+                InboxMessages = deletedMessages
+            };
+
+            ViewBag.PageTitle = "Çöp Kutusu";
+
+            return View("SendEmail", model);
+        }
+
+
+
+
+
     }
+
 }
+
 
