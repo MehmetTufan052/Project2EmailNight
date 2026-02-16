@@ -93,10 +93,10 @@
                                     <a href="/Category/WorkCategory" class="list-group-item d-flex align-items-center">
                                         <i class='bx bxs-circle me-3 font-12 text-danger'></i><span>İş E-postaları</span>
                                     </a>
-                                    <a href="Category/Education" class="list-group-item d-flex align-items-center">
+                                    <a href="/Category/EducationCategory" class="list-group-item d-flex align-items-center">
                                         <i class='bx bxs-circle me-3 font-12 text-success'></i><span>Eğitim E-postaları</span>
                                     </a>
-                                    <a href="Category/Family" class="list-group-item d-flex align-items-center">
+                                    <a href="/Category/FamilyCategory" class="list-group-item d-flex align-items-center">
                                         <i class='bx bxs-circle me-3 font-12 text-info'></i><span>Aile E-postaları</span>
                                     </a>
                                 </div>
@@ -109,7 +109,59 @@
                 <div class="email-content p-4">
 
                     <div class="card shadow-sm border-0">
+                        <div class="card-body d-flex align-items-center">
 
+                            <!-- Yıldız -->
+                            <button class="btn btn-light me-2"
+                                    onclick="toggleStar(@Model.MessageId)">
+                                <i id="starIcon"
+                                   class="bx @(Model.IsStarred ? "bxs-star text-warning" : "bx-star text-secondary")">
+                                </i>
+                            </button>
+
+                            <!-- Sil -->
+                            <button class="btn btn-light me-2"
+                                    onclick="deleteMessage(@Model.MessageId)">
+                                <i class="bx bx-trash text-danger"></i>
+                            </button>
+
+                            <!-- Kategori -->
+                            <div class="dropdown me-2">
+                                <button class="btn btn-light dropdown-toggle"
+                                        type="button"
+                                        data-bs-toggle="dropdown">
+                                    <i class="bx bx-category me-1"></i> Kategori
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item"
+                                           href="#"
+                                           onclick="setCategory(@Model.MessageId, 1)">
+                                            İş E-postaları
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                           href="#"
+                                           onclick="setCategory(@Model.MessageId, 2)">
+                                            Eğitim E-postaları
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                           href="#"
+                                           onclick="setCategory(@Model.MessageId, 3)">
+                                            Aile E-postaları
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="ms-auto text-muted small">
+                                @Model.SendDate.ToString("dd MMM yyyy HH:mm")
+                            </div>
+
+                        </div>
                         <!-- Header -->
                         <div class="card-header bg-white border-bottom">
                             <h5 class="mb-1">@Model.Subject</h5>
@@ -137,6 +189,72 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    function toggleStar(id) {
+
+        fetch('/Email/ToggleStar/' + id, {
+            method: 'POST'
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const icon = document.getElementById("starIcon");
+
+                if (data.isStarred) {
+                    icon.classList.remove("bx-star", "text-secondary");
+                    icon.classList.add("bxs-star", "text-warning");
+                } else {
+                    icon.classList.remove("bxs-star", "text-warning");
+                    icon.classList.add("bx-star", "text-secondary");
+                }
+            }
+        });
+    }
+
+    function deleteMessage(id) {
+
+        fetch('/Email/Delete/' + id, {
+            method: 'POST'
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = '/Email/SendEmail';
+            }
+        });
+    }
+
+    function setCategory(id, categoryId) {
+
+        fetch('/Email/SetCategory?id=' + id + '&categoryId=' + categoryId, {
+            method: 'POST'
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert("Kategori güncellendi");
+            }
+        });
+    }
+</script>
+
+<style>
+    .card-body button {
+        transition: all 0.2s ease;
+    }
+
+        .card-body button:hover {
+            transform: scale(1.05);
+            background-color: #f1f3f9;
+        }
+
+    .dropdown-menu {
+        border-radius: 12px;
+    }
+</style>
+
 
 <style>
     .message-content {

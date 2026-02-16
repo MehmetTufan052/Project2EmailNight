@@ -26,13 +26,23 @@ namespace Project2EmailNight.Controllers
                 return View(values);
             }
         }
-        public IActionResult EgitimEposta()
+        public IActionResult EducationCategory()
         {
-            return View();
+            var values = _context.Messages
+                                      .Where(x => x.EmailCategory.Name == "Eğitim Epostaları")
+                                      .OrderByDescending(x => x.SendDate)
+                                      .ToList();
+
+            return View(values);
         }
-        public IActionResult AileEposta()
+        public IActionResult FamilyCategory()
         {
-            return View();
+            var values = _context.Messages
+                                     .Where(x => x.EmailCategory.Name == "Aile Epostaları")
+                                     .OrderByDescending(x => x.SendDate)
+                                     .ToList();
+
+            return View(values);
         }
     }
 }

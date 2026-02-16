@@ -41,6 +41,17 @@ namespace Project2EmailNight.Controllers
             var unreadCount = inboxMessages.Count(x => x.IsStatus == false);
             ViewBag.UnreadCount = unreadCount;
 
+
+            ViewBag.InboxCount = await _context.Messages
+                .CountAsync(x => x.ReceiverEmail == user.Email
+                              && !x.IsDeleted
+                              && !x.IsDraft);
+
+            ViewBag.DraftCount = await _context.Messages
+                .CountAsync(x => x.ReceiverEmail == user.Email
+                              && x.IsDraft
+                              && !x.IsDeleted);
+
             return View(model);
         }
 
@@ -247,6 +258,49 @@ namespace Project2EmailNight.Controllers
             ViewBag.PageTitle = "Çöp Kutusu";
 
             return View("SendEmail", model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> BulkDelete([FromBody] List<int> ids)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (ids == null || !ids.Any())
+                return Json(new { success = false });
+
+            var messages = await _context.Messages
+                .Where(x => ids.Contains(x.MessageId) &&
+                       (x.ReceiverEmail == user.Email
+                        || x.SenderEmail == user.Email))
+                .ToListAsync();
+
+            foreach (var message in messages)
+            {
+                message.IsDeleted = true;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SetCategory(int id, int categoryId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var message = await _context.Messages
+                .FirstOrDefaultAsync(x => x.MessageId == id &&
+                                         (x.ReceiverEmail == user.Email
+                                          || x.SenderEmail == user.Email));
+
+            if (message == null)
+                return Json(new { success = false });
+
+            message.EmailCategoryId = categoryId;
+
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true });
         }
 
 

@@ -11,6 +11,7 @@
             public DateTime SendDate { get; set; }
             public bool IsStatus { get; set; }
             public bool IsDraft { get; set; }
+            public bool IsStarred { get; set; }
         
     }
 }

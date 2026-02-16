@@ -58,5 +58,12 @@ namespace Project2EmailNight.Controllers
 
             return RedirectToAction("Index", "Profile");
         }
+       
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("UserLogin", "Login"); // Login sayfanın action adı buysa
+        }
     }
 }

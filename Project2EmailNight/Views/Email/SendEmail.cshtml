@@ -24,7 +24,7 @@
                                     <div class="list-group list-group-flush mb-3">
                                         <a href="/Email/SendEmail" class="list-group-item active d-flex align-items-center">
                                             <i class='bx bxs-inbox me-3 font-20'></i><span>Gelen Kutusu</span>
-                                            <span class="badge bg-primary rounded-pill ms-auto">7,513</span>
+                                            <span class="badge bg-primary rounded-pill ms-auto">@ViewBag.InboxCount</span>
                                         </a>
                                         <a href="/Email/Starred" class="list-group-item d-flex align-items-center">
                                             <i class='bx bxs-star me-3 font-20'></i><span>Yıldızlılar</span>
@@ -34,7 +34,7 @@
                                         </a>
                                         <a href="/Email/Drafts" class="list-group-item d-flex align-items-center">
                                             <i class='bx bxs-file-blank me-3 font-20'></i><span>Taslaklar</span>
-                                            <span class="badge bg-warning text-dark rounded-pill ms-auto">4</span>
+                                            <span class="badge bg-warning text-dark rounded-pill ms-auto"> @ViewBag.DraftCount</span>
                                         </a>
                                         <a href="/Email/Trash" class="list-group-item d-flex align-items-center">
                                             <i class='bx bxs-trash-alt me-3 font-20'></i><span>Silinenler</span>
@@ -46,10 +46,10 @@
                                         <a href="/Category/WorkCategory" class="list-group-item d-flex align-items-center">
                                             <i class='bx bxs-circle me-3 font-12 text-danger'></i><span>İş E-postaları</span>
                                         </a>
-                                        <a href="Category/Education" class="list-group-item d-flex align-items-center">
+                                        <a href="/Category/EducationCategory" class="list-group-item d-flex align-items-center">
                                             <i class='bx bxs-circle me-3 font-12 text-success'></i><span>Eğitim E-postaları</span>
                                         </a>
-                                        <a href="Category/Family" class="list-group-item d-flex align-items-center">
+                                        <a href="/Category/FamilyCategory" class="list-group-item d-flex align-items-center">
                                             <i class='bx bxs-circle me-3 font-12 text-info'></i><span>Aile E-postaları</span>
                                         </a>
                                     </div>
@@ -62,28 +62,29 @@
                                     <i class='bx bx-menu'></i>
                                 </div>
                                 <div class="btn btn-white">
-                                    <input class="form-check-input" type="checkbox">
+                                    <input class="form-check-input" type="checkbox" id="selectAllCheckbox">
                                 </div>
                                 <div class="">
-                                    <button type="button" class="btn btn-white ms-2">
+                                    <button type="button"
+                                            class="btn btn-white ms-2"
+                                            onclick="refreshInbox()">
                                         <i class='bx bx-refresh me-0'></i>
                                     </button>
                                 </div>
-                                <div class="">
-                                    <button type="button" class="btn btn-white ms-2">
-                                        <i class='bx bx-downvote me-0'></i>
-                                    </button>
-                                </div>
+
                                 <div class="d-none d-md-flex">
                                     <button type="button" class="btn btn-white ms-2">
                                         <i class='bx bx-file me-0'></i>
                                     </button>
                                 </div>
                                 <div class="">
-                                    <button type="button" class="btn btn-white ms-2">
+                                    <button type="button"
+                                            id="bulkDeleteBtn"
+                                            class="btn btn-white ms-2">
                                         <i class='bx bx-trash me-0'></i>
                                     </button>
                                 </div>
+
                             </div>
                             <div class="flex-grow-1 mx-xl-2 my-2 my-xl-0">
                                 <div class="input-group">
@@ -132,7 +133,13 @@
 
 
                                         <div class="d-flex align-items-center px-4 py-3 border-bottom email-row @(unread ? "unread-row" : "")">
-
+                                            <!-- CHECKBOX -->
+                                            <div class="me-3">
+                                                <input type="checkbox"
+                                                       class="form-check-input message-checkbox"
+                                                       value="@item.MessageId"
+                                                       onclick="event.stopPropagation();">
+                                            </div>
                                             <!-- STAR -->
                                             <div class="me-3">
                                                 <i class='bx @(item.IsStarred ? "bxs-star text-warning" : "bx-star text-secondary") star-icon'
@@ -343,6 +350,68 @@
                 }
             });
         }
+    </script>
+
+    <script>
+        const selectAll = document.getElementById("selectAllCheckbox");
+        const checkboxes = document.querySelectorAll(".message-checkbox");
+
+        selectAll.addEventListener("change", function () {
+            checkboxes.forEach(function (checkbox) {
+                checkbox.checked = selectAll.checked;
+            });
+        });
+
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener("change", function () {
+                const allChecked = [...checkboxes].every(c => c.checked);
+                selectAll.checked = allChecked;
+            });
+        });
+    </script>
+
+    <script>
+        function refreshInbox() {
+            const icon = document.querySelector('.bx-refresh');
+
+            icon.classList.add("bx-spin");
+
+            setTimeout(() => {
+                location.reload();
+            }, 500);
+        }
+    </script>
+
+    <script>
+        document.getElementById("bulkDeleteBtn")
+            .addEventListener("click", function () {
+
+            const selectedIds = [];
+
+            document.querySelectorAll(".message-checkbox:checked")
+                .forEach(cb => {
+                    selectedIds.push(parseInt(cb.value));
+                });
+
+            if (selectedIds.length === 0) {
+                alert("Lütfen silmek için mesaj seçin.");
+                return;
+            }
+
+            fetch('/Email/BulkDelete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(selectedIds)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                }
+            });
+        });
     </script>
 
 
