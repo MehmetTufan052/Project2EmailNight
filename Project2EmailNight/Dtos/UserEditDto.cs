@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Project2EmailNight.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace Project2EmailNight.Dtos
@@ -20,5 +21,11 @@ namespace Project2EmailNight.Dtos
 
         public int DraftCount { get; set; }
         public int StarredCount { get; set; }
+
+        public int TotalMessageCount { get; set; }
+        public int ReadMessageCount { get; set; }
+        public int TodayMessageCount { get; set; }
+        public int DeletedMessageCount { get; set; }
+        public List<Message> LastMessages { get; set; }
     }
 }

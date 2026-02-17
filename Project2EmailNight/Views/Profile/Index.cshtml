@@ -48,34 +48,59 @@
                         <div class="card radius-15">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-12 col-lg-7 border-right">
-                                        <div class="d-md-flex align-items-center">
-                                            <div class="mb-md-0 mb-3">
-                                                <img src="@Model.ImageUrl" class="rounded-circle shadow" width="130" height="130" alt="Profil Fotoğrafı" />
-                                            </div>
-                                            <div class="ms-md-4 flex-grow-1">
-                                                <div class="d-flex align-items-center mb-1">
-                                                    <h4 class="mb-0">@Model.Name @Model.Surname</h4>
+                                    <div class="col-12 col-lg-7 mt-3 mt-lg-0">
+                                        <div class="bg-light rounded-4 p-4 h-100">
+
+                                            <div class="d-flex align-items-center">
+
+                                                <!-- Profil Foto -->
+                                                <div class="me-4">
+                                                    <img src="@Url.Content(Model.ImageUrl)"
+                                                         class="rounded-circle"
+                                                         width="110"
+                                                         height="110"
+                                                         style="object-fit:cover;"
+                                                         alt="Profil Fotoğrafı" />
                                                 </div>
-                                                <p class="mb-0 text-muted">İngilizce Öğretmeni</p>
-                                                <p class="text-primary"><i class='bx bx-buildings'></i>ELT Sertifikalı İngilizce Öğretmeni </p>
+
+                                                <!-- Bilgiler -->
+                                                <div class="flex-grow-1">
+
+                                                    <h4 class="fw-bold mb-1">
+                                                        @Model.Name @Model.Surname
+                                                    </h4>
+
+                                                    <div class="text-muted mb-2 small">
+                                                        İngilizce Öğretmeni
+                                                    </div>
+
+                                                    <div class="d-flex align-items-center text-muted small">
+                                                        <i class="bx bx-buildings me-2"></i>
+                                                        ELT Sertifikalı İngilizce Öğretmeni
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-5 mt-3 mt-lg-0">
+                                        <div class="bg-light rounded-4 p-4">
+                                            <div class="mb-3">
+                                                <span class="text-muted small">Yaş</span>
+                                                <div class="fw-bold fs-5">26</div>
+                                            </div>
+
+                                            <div>
+                                                <span class="text-muted small">Lokasyon</span>
+                                                <div class="fw-bold fs-6">Fatsa, Ordu, Türkiye</div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-lg-5">
-                                        <table class="table table-sm table-borderless mt-md-0 mt-3">
-                                            <tbody>
-                                                <tr>
-                                                    <th>Yaş:</th>
-                                                    <td>26</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Lokasyonu:</th>
-                                                    <td>Fatsa,Ordu,Türkiye</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+
+
+
                                 </div>
                                 <!--end row-->
                                 <br />
@@ -99,7 +124,7 @@
                                                         <div class="card-body">
                                                             <div class="d-flex align-items-center">
                                                                 <div>
-                                                                    <h2 class="mb-0 text-white">1,245</h2>
+                                                                    <h2 class="mb-0 text-white">@Model.TotalMessageCount</h2>
                                                                     <p class="mb-0">Toplam Mesaj</p>
                                                                 </div>
                                                                 <div class="ms-auto font-35 text-white"><i class="bx bx-envelope"></i></div>
@@ -112,7 +137,7 @@
                                                         <div class="card-body">
                                                             <div class="d-flex align-items-center">
                                                                 <div>
-                                                                    <h2 class="mb-0 text-white">850</h2>
+                                                                    <h2 class="mb-0 text-white">@Model.ReadMessageCount</h2>
                                                                     <p class="mb-0">Okunan Mesajlar</p>
                                                                 </div>
                                                                 <div class="ms-auto font-35 text-white"><i class="bx bx-envelope-open"></i></div>
@@ -173,20 +198,32 @@
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                        <tr>
-                                                                            <td>ahmet@mail.com</td>
-                                                                            <td>Proje Revizyonu</td>
-                                                                            <td>12.02.2026</td>
-                                                                            <td><span class="badge bg-light-success text-success w-100">Okundu</span></td>
-                                                                            <td><button class="btn btn-sm btn-outline-primary"><i class="bx bx-search"></i></button></td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>selin@mail.com</td>
-                                                                            <td>Toplantı Notları</td>
-                                                                            <td>11.02.2026</td>
-                                                                            <td><span class="badge bg-light-warning text-warning w-100">Bekliyor</span></td>
-                                                                            <td><button class="btn btn-sm btn-outline-primary"><i class="bx bx-search"></i></button></td>
-                                                                        </tr>
+                                                                        @foreach (var item in Model.LastMessages)
+                                                                        {
+                                                                            <tr>
+                                                                                <td>@item.SenderEmail</td>
+                                                                                <td>@item.Subject</td>
+                                                                                <td>@item.SendDate.ToString("dd.MM.yyyy")</td>
+                                                                                <td>
+                                                                                    @if (item.IsStatus)
+                                                                                    {
+                                                                                        <span class="badge bg-light-success text-success w-100">Okundu</span>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <span class="badge bg-light-warning text-warning w-100">Bekliyor</span>
+                                                                                    }
+                                                                                </td>
+                                                                                <td>
+                                                                                    <a asp-controller="Email"
+                                                                                       asp-action="MessageDetails"
+                                                                                       asp-route-id="@item.MessageId"
+                                                                                       class="btn btn-sm btn-outline-primary">
+                                                                                        <i class="bx bx-search"></i>
+                                                                                    </a>
+                                                                                </td>
+                                                                            </tr>
+                                                                        }
                                                                     </tbody>
                                                                 </table>
                                                             </div>
@@ -207,10 +244,10 @@
                                                             <hr>
                                                             <div class="list-group list-group-flush">
                                                                 <a href="javascript:;" class="list-group-item d-flex justify-content-between align-items-center bg-transparent">
-                                                                    Bugün Gelen <span class="badge bg-info rounded-pill">14</span>
+                                                                    Bugün Gelen <span class="badge bg-info rounded-pill">@Model.TodayMessageCount</span>
                                                                 </a>
                                                                 <a href="javascript:;" class="list-group-item d-flex justify-content-between align-items-center bg-transparent">
-                                                                    Silinmişler <span class="badge bg-secondary rounded-pill">32</span>
+                                                                    Silinmişler <span class="badge bg-secondary rounded-pill">@Model.DeletedMessageCount</span>
                                                                 </a>
                                                             </div>
                                                         </div>

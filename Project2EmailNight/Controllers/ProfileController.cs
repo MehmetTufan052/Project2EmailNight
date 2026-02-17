@@ -9,6 +9,7 @@ using Project2EmailNight.Entities;
 
 namespace Project2EmailNight.Controllers
 {
+    [Authorize]
     public class ProfileController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
@@ -23,7 +24,16 @@ namespace Project2EmailNight.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+                return RedirectToAction("UserLogin", "Login");
+
+            var lastMessages = await _context.Messages
+        .Where(x => x.ReceiverEmail == user.Email && !x.IsDeleted)
+        .OrderByDescending(x => x.SendDate)
+        .Take(5)
+        .ToListAsync();
 
             var dto = new UserEditDto
             {
@@ -31,14 +41,16 @@ namespace Project2EmailNight.Controllers
                 Surname = user.Surname,
                 Email = user.Email,
                 ImageUrl = string.IsNullOrEmpty(user.ImageUrl)
-                    ? "/assets/images/avatars/avatar-1.png"
-                    : user.ImageUrl,
+            ? "/assets/images/avatars/avatar-1.png"
+            : user.ImageUrl,
 
-             DraftCount = _context.Messages
-            .Count(x => x.SenderEmail == user.Email && x.IsDraft==true),
+                DraftCount = await _context.Messages
+            .CountAsync(x => x.SenderEmail == user.Email && x.IsDraft),
 
-                StarredCount = _context.Messages
-            .Count(x => x.ReceiverEmail == user.Email && x.IsStarred==true)
+                StarredCount = await _context.Messages
+            .CountAsync(x => x.ReceiverEmail == user.Email && x.IsStarred),
+
+                LastMessages = lastMessages   // 🔥 EKLENDİ
             };
 
             return View(dto);
@@ -49,18 +61,26 @@ namespace Project2EmailNight.Controllers
         public async Task<IActionResult> Index(UserEditDto userEditDto)
         {
 
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (!ModelState.IsValid)
+                return View(userEditDto);
+
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+                return RedirectToAction("UserLogin", "Login");
 
             user.Name = userEditDto.Name;
             user.Surname = userEditDto.Surname;
             user.Email = userEditDto.Email;
 
+            // Şifre güncelleme
             if (!string.IsNullOrEmpty(userEditDto.Password))
             {
                 user.PasswordHash = _userManager.PasswordHasher
                     .HashPassword(user, userEditDto.Password);
             }
 
+            // Resim yükleme
             if (userEditDto.Image != null && userEditDto.Image.Length > 0)
             {
                 var extension = Path.GetExtension(userEditDto.Image.FileName);
@@ -76,16 +96,17 @@ namespace Project2EmailNight.Controllers
                 await userEditDto.Image.CopyToAsync(stream);
 
                 user.ImageUrl = "/images/" + imageName;
-
-                var result = await _userManager.UpdateAsync(user);
-
-                if (result.Succeeded)
-                {
-                    return RedirectToAction(nameof(Index));
-                }
-
-
             }
+
+            // 🔥 UPDATE HER DURUMDA ÇALIŞIYOR
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+                return RedirectToAction(nameof(Index));
+
+            foreach (var error in result.Errors)
+                ModelState.AddModelError("", error.Description);
+
             return View(userEditDto);
         }
     }

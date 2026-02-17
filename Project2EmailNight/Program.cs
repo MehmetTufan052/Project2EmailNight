@@ -12,6 +12,11 @@ builder.Services.AddDbContext<EmailContext>();
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<EmailContext>
     ().AddErrorDescriber<CustomIdentityValidator>();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Login/UserLogin";
+});
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

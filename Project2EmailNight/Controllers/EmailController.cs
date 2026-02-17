@@ -7,9 +7,11 @@ using Project2EmailNight.Dtos;
 using Project2EmailNight.Entities;
 using Project2EmailNight.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Project2EmailNight.Controllers
 {
+    [Authorize]
     public class EmailController : Controller
     {
         private readonly EmailContext _context;
@@ -25,12 +27,15 @@ namespace Project2EmailNight.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
 
-            var inboxMessages = _context.Messages
-       .Where(x => x.ReceiverEmail == user.Email
-         && !x.IsDraft
-         && !x.IsDeleted)
-       .OrderByDescending(x => x.SendDate)
-       .ToList();
+            if (user == null)
+                return RedirectToAction("UserLogin", "Login");
+
+            var inboxMessages = await _context.Messages
+                .Where(x => x.ReceiverEmail == user.Email
+                            && !x.IsDraft
+                            && !x.IsDeleted)
+                .OrderByDescending(x => x.SendDate)
+                .ToListAsync();
 
             var model = new SendEmailPageViewModel()
             {
@@ -38,9 +43,7 @@ namespace Project2EmailNight.Controllers
                 InboxMessages = inboxMessages
             };
 
-            var unreadCount = inboxMessages.Count(x => x.IsStatus == false);
-            ViewBag.UnreadCount = unreadCount;
-
+            ViewBag.UnreadCount = inboxMessages.Count(x => !x.IsStatus);
 
             ViewBag.InboxCount = await _context.Messages
                 .CountAsync(x => x.ReceiverEmail == user.Email
@@ -48,7 +51,7 @@ namespace Project2EmailNight.Controllers
                               && !x.IsDraft);
 
             ViewBag.DraftCount = await _context.Messages
-                .CountAsync(x => x.ReceiverEmail == user.Email
+                .CountAsync(x => x.SenderEmail == user.Email   
                               && x.IsDraft
                               && !x.IsDeleted);
 
