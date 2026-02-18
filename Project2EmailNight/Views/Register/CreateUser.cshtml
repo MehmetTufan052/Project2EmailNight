@@ -135,7 +135,8 @@
 															   value="true" />
 
 														<label class="form-check-label" for="AcceptTerms">
-															Şartları okudum kabul ediyorum
+															<a href="javascript:;" id="termsLink">Şartlar ve Koşulları</a>
+														 okudum kabul ediyorum
 														</label>
 													</div>
 
@@ -143,8 +144,6 @@
 
 
 													<span asp-validation-for="AcceptTerms" class="text-danger"></span>
-
-														@* <label class="form-check-label" for="termsCheckbox"><a href="javascript:;" id="termsLink">Şartlar ve Koşulları</a> okudum ve kabul ediyorum.</label> *@
 													
 												</div>
 												<div class="col-12">
@@ -153,7 +152,7 @@
 													</div>
 												</div>
 												<div class="col-12 text-center">
-													<p class="mb-0">Zaten hesabınız var mı? <a href="login.html">Giriş Yapın</a></p>
+													<p class="mb-0">Zaten hesabınız var mı? <a href="/Login/UserLogin">Giriş Yapın</a></p>
 												</div>
 											</form>
 										</div>
