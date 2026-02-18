@@ -4,7 +4,7 @@
     ViewData["Title"] = "SendEmail";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-<body>
+
     <!-- wrapper -->
     <div class="wrapper">
 
@@ -87,13 +87,21 @@
 
                             </div>
                             <div class="flex-grow-1 mx-xl-2 my-2 my-xl-0">
-                                <div class="input-group">
-                                    <span class="input-group-text bg-transparent"><i class="bx bx-search"></i></span>
-                                    <input type="text" class="form-control" placeholder="Ara">
-                                </div>
+                                <form method="get" asp-action="SendEmail" asp-controller="Email">
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-transparent">
+                                            <i class="bx bx-search"></i>
+                                        </span>
+                                        <input type="text"
+                                               name="search"
+                                               value="@Context.Request.Query["search"]"
+                                               class="form-control"
+                                               placeholder="Mesajlarda ara...">
+                                    </div>
+                                </form>
                             </div>
+
                             <div class="ms-auto d-flex align-items-center">
-                                <button class="btn btn-sm btn-light">1-50 / 8,740</button>
                                 <button class="btn btn-white px-2 ms-2">
                                     <i class='bx bx-chevron-left me-0'></i>
                                 </button>
@@ -277,7 +285,7 @@
 
     <script>
         new PerfectScrollbar('.email-navigation');
-        new PerfectScrollbar('.email-list');
+        // new PerfectScrollbar('.email-list');
     </script>
 
 
@@ -309,6 +317,19 @@
                 quill.root.innerHTML;
         };
     </script>
+    @if (!string.IsNullOrEmpty(Model?.MailRequest?.MessageDetail))
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+
+                var existingContent = `@Html.Raw(Model.MailRequest.MessageDetail)`;
+
+                quill.root.innerHTML = existingContent;
+
+            });
+        </script>
+    }
+
     <script>
         function toggleStar(event, messageId) {
             event.preventDefault();
@@ -413,7 +434,32 @@
             });
         });
     </script>
+    @if (Model?.MailRequest?.ReceiverEmail != null)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
 
+                document.querySelector(".compose-mail-popup")
+                        .classList.add("show");
+
+            });
+        </script>
+    }
+    @if (Model?.MailRequest?.ReceiverEmail != null)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+
+                var compose = document.querySelector(".compose-mail-popup");
+
+                if (compose) {
+                    compose.style.display = "block";
+                    compose.classList.add("show");
+                }
+
+            });
+        </script>
+    }
 
     <style>
         .email-row {
@@ -442,9 +488,17 @@
             font-weight: 600;
             font-size: 14px;
         }
+
+    .email-content {
+        min-height: calc(100vh - 230px);
+    }
+
+    .email-list {
+        overflow-y: auto;
+    }
     </style>
 
-</body>
+
 
 
 

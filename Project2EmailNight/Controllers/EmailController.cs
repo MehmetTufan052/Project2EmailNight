@@ -23,17 +23,30 @@ namespace Project2EmailNight.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> SendEmail()
+        public async Task<IActionResult> SendEmail(string? search)
         {
             var user = await _userManager.GetUserAsync(User);
 
             if (user == null)
                 return RedirectToAction("UserLogin", "Login");
 
-            var inboxMessages = await _context.Messages
-                .Where(x => x.ReceiverEmail == user.Email
-                            && !x.IsDraft
-                            && !x.IsDeleted)
+            var query = _context.Messages
+         .Where(x => x.ReceiverEmail == user.Email
+                     && !x.IsDraft
+                     && !x.IsDeleted);
+
+            // 🔍 ARAMA BURADA YAPILIYOR
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.ToLower();
+
+                query = query.Where(x =>
+                    x.Subject.ToLower().Contains(search) ||
+                    x.MessageDetail.ToLower().Contains(search) ||
+                    x.SenderEmail.ToLower().Contains(search));
+            }
+
+            var inboxMessages = await query
                 .OrderByDescending(x => x.SendDate)
                 .ToListAsync();
 
@@ -51,7 +64,7 @@ namespace Project2EmailNight.Controllers
                               && !x.IsDraft);
 
             ViewBag.DraftCount = await _context.Messages
-                .CountAsync(x => x.SenderEmail == user.Email   
+                .CountAsync(x => x.SenderEmail == user.Email
                               && x.IsDraft
                               && !x.IsDeleted);
 
@@ -306,9 +319,55 @@ namespace Project2EmailNight.Controllers
             return Json(new { success = true });
         }
 
+        [HttpGet]
+        public IActionResult Reply(int id)
+        {
+            var currentUserMail = User.Identity.Name;
 
+            var message = _context.Messages.Find(id);
 
+            var viewModel = new SendEmailPageViewModel
+            {
+                MailRequest = new MailRequestDto
+                {
+                    ReceiverEmail = message.SenderEmail,
+                    Subject = "Re: " + message.Subject,
+                    MessageDetail = message.MessageDetail
+                },
+                InboxMessages = _context.Messages
+                    .Where(x => x.ReceiverEmail == currentUserMail)
+                    .OrderByDescending(x => x.SendDate)
+                    .ToList()
+            };
 
+            return View("SendEmail", viewModel);
+        }
+
+        [HttpGet]
+        public IActionResult Forward(int id)
+        {
+            var message = _context.Messages.Find(id);
+            if (message == null)
+                return RedirectToAction("SendEmail");
+
+            var viewModel = new SendEmailPageViewModel
+            {
+                MailRequest = new MailRequestDto
+                {
+                    Subject = message.Subject.StartsWith("Fwd:")
+                                ? message.Subject
+                                : "Fwd: " + message.Subject,
+                    MessageDetail = $"\n\n\n--- Yönlendirilen Mesaj ---\n" +
+                           $"Gönderen: {message.SenderEmail}\n" +
+                           $"Alıcı: {message.ReceiverEmail}\n" +
+                           $"Tarih: {message.SendDate:dd.MM.yyyy HH:mm}\n\n" +
+                           $"{message.MessageDetail}"
+                },
+                Categories = _context.EmailCategories.ToList()
+            };
+
+            return View("SendEmail", viewModel);
+        }
 
     }
 

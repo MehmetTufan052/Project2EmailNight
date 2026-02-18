@@ -29,11 +29,14 @@ namespace Project2EmailNight.Controllers
             if (user == null)
                 return RedirectToAction("UserLogin", "Login");
 
-            var lastMessages = await _context.Messages
+            var inboxMessages = await _context.Messages
         .Where(x => x.ReceiverEmail == user.Email && !x.IsDeleted)
-        .OrderByDescending(x => x.SendDate)
-        .Take(5)
         .ToListAsync();
+
+            var lastMessages = inboxMessages
+       .OrderByDescending(x => x.SendDate)
+       .Take(5)
+       .ToList();
 
             var dto = new UserEditDto
             {
@@ -44,13 +47,25 @@ namespace Project2EmailNight.Controllers
             ? "/assets/images/avatars/avatar-1.png"
             : user.ImageUrl,
 
+                // ✅ Mevcut olanlar
                 DraftCount = await _context.Messages
             .CountAsync(x => x.SenderEmail == user.Email && x.IsDraft),
 
                 StarredCount = await _context.Messages
             .CountAsync(x => x.ReceiverEmail == user.Email && x.IsStarred),
 
-                LastMessages = lastMessages   // 🔥 EKLENDİ
+                LastMessages = lastMessages,
+
+                // 🔥 EKLENENLER
+                TotalMessageCount = inboxMessages.Count,
+
+                ReadMessageCount = inboxMessages.Count(x => x.IsStatus),
+
+                TodayMessageCount = inboxMessages
+            .Count(x => x.SendDate.Date == DateTime.Today),
+
+                DeletedMessageCount = await _context.Messages
+            .CountAsync(x => x.ReceiverEmail == user.Email && x.IsDeleted)
             };
 
             return View(dto);

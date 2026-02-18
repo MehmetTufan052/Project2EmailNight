@@ -156,10 +156,15 @@
                                     </li>
                                 </ul>
                             </div>
-
-                            <div class="ms-auto text-muted small">
-                                @Model.SendDate.ToString("dd MMM yyyy HH:mm")
-                            </div>
+                            <!-- Cevapla -->
+                            <button type="button"
+                                    class="btn btn-light me-2"
+                                    id="replyBtn"
+                                    data-sender="@Model.SenderEmail"
+                                    data-subject="@Model.Subject"
+                                    data-body="@Html.Raw(Model.MessageDetail)">
+                                <i class="bx bx-reply me-1 text-primary"></i> Cevapla
+                            </button>
 
                         </div>
                         <!-- Header -->
@@ -267,4 +272,93 @@
     }
 </style>
 
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const editorElement = document.getElementById("editor");
+        if (!editorElement) return;
+
+        const quill = new Quill('#editor', {
+            theme: 'snow'
+        });
+
+        const replyBtn = document.getElementById("replyBtn");
+
+        if (replyBtn) {
+            replyBtn.addEventListener("click", function () {
+
+                document.getElementById("replyReceiver").value =
+                    this.dataset.sender;
+
+                document.getElementById("replySubject").value =
+                    "Re: " + this.dataset.subject;
+
+                quill.root.innerHTML =
+                    "<br><br><hr>" + this.dataset.body;
+
+                document.querySelector(".compose-mail-popup")
+                    .style.display = "block";
+            });
+        }
+
+        const composeForm =
+            document.querySelector(".compose-mail-popup form");
+
+        if (composeForm) {
+            composeForm.addEventListener("submit", function () {
+                document.getElementById("replyBody").value =
+                    quill.root.innerHTML;
+            });
+        }
+
+    });
+
+    function closeCompose() {
+        document.querySelector(".compose-mail-popup")
+            .style.display = "none";
+    }
+</script>
+
+<div class="compose-mail-popup" style="display:none;">
+    <div class="card shadow position-fixed bottom-0 end-0 m-4" style="width:500px; z-index:9999;">
+        <div class="card-header bg-primary text-white">
+            Yeni Mesaj
+            <button type="button" class="btn-close btn-close-white float-end"
+                    onclick="closeCompose()"></button>
+        </div>
+        <div class="card-body">
+
+            <form method="post" action="/Email/SendEmail">
+
+                <div class="mb-2">
+                    <input type="text" name="ReceiverEmail"
+                           id="replyReceiver"
+                           class="form-control"
+                           placeholder="Alıcı">
+                </div>
+
+                <div class="mb-2">
+                    <input type="text" name="Subject"
+                           id="replySubject"
+                           class="form-control"
+                           placeholder="Konu">
+                </div>
+
+                <div id="editor" style="height:200px;"></div>
+                <input type="hidden" name="MessageDetail" id="replyBody" />
+
+                <div class="mt-2 text-end">
+                    <button type="submit" class="btn btn-primary">
+                        Gönder
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
 

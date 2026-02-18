@@ -8,5 +8,7 @@ namespace Project2EmailNight.Models
         public MailRequestDto MailRequest { get; set; }
 
         public List<Message> InboxMessages { get; set; }
+
+        public List<EmailCategory> Categories { get; set; }
     }
 }
