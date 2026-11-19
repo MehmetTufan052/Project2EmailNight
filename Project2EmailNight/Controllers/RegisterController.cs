@@ -10,10 +10,12 @@ namespace Project2EmailNight.Controllers
     public class RegisterController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly IConfiguration _configuration;
 
-        public RegisterController(UserManager<AppUser> userManager)
+        public RegisterController(UserManager<AppUser> userManager, IConfiguration configuration)
         {
             _userManager = userManager;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -65,7 +67,9 @@ namespace Project2EmailNight.Controllers
                 using (SmtpClient smtpClient = new SmtpClient())
                 {
                     smtpClient.Connect("smtp.gmail.com", 587, false);
-                    smtpClient.Authenticate("tufaneser8@gmail.com", "rghp xhld nktr pxmb");
+                    smtpClient.Authenticate(
+                     _configuration["MailSettings:Email"],
+                     _configuration["MailSettings:Password"]);
                     smtpClient.Send(mimeMessage);
                     smtpClient.Disconnect(true);
                 }
@@ -87,8 +91,8 @@ namespace Project2EmailNight.Controllers
         {
             return View();
         }
-        
-        
+
+
         [HttpPost]
         public async Task<IActionResult> EmailConfirm(string Email, int ConfirmCode)
         {

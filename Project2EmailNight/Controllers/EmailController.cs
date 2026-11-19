@@ -35,7 +35,7 @@ namespace Project2EmailNight.Controllers
                      && !x.IsDraft
                      && !x.IsDeleted);
 
-            // 🔍 ARAMA BURADA YAPILIYOR
+            
             if (!string.IsNullOrWhiteSpace(search))
             {
                 search = search.ToLower();
